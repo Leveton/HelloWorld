@@ -7,9 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "AppDelegate.h"
 #import "SSSearchBar.h"
-#import "Car.h"
 
 @interface ViewController ()<SSSearchBarDelegate>
 @property (nonatomic, strong) UILabel *label;
@@ -20,19 +18,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-  
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *addressEntity  = [NSEntityDescription entityForName:@"Car" inManagedObjectContext:context];
-    Car *car0   = [[Car alloc] initWithEntity:addressEntity insertIntoManagedObjectContext:context];
-    [car0 setDriver:@"mike"];
-    
-    NSError *error = nil;
-    if (![context save:&error]) {
-        NSLog(@"save error: %@", error);
-    }else{
-        NSLog(@"save 0 ok");
-    }
     
 //    self.searchBar.cancelButtonHidden = NO;
 //    self.searchBar.placeholder = NSLocalizedString(@"Search text here!", nil);
