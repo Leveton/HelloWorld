@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C3F8CB41CBDA3D200215EC9 /* EncapsulatedNavVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3F8CB31CBDA3D200215EC9 /* EncapsulatedNavVC.m */; };
 		1CB67E521CBD80EF0067D6D6 /* PresentWithRadiusVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB67E511CBD80EF0067D6D6 /* PresentWithRadiusVC.m */; };
 		1CB6BC201C97564600741ED9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC1F1C97564600741ED9 /* main.m */; };
 		1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC221C97564600741ED9 /* AppDelegate.m */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C3F8CB21CBDA3D200215EC9 /* EncapsulatedNavVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncapsulatedNavVC.h; sourceTree = "<group>"; };
+		1C3F8CB31CBDA3D200215EC9 /* EncapsulatedNavVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EncapsulatedNavVC.m; sourceTree = "<group>"; };
 		1CB67E501CBD80EF0067D6D6 /* PresentWithRadiusVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PresentWithRadiusVC.h; sourceTree = "<group>"; };
 		1CB67E511CBD80EF0067D6D6 /* PresentWithRadiusVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PresentWithRadiusVC.m; sourceTree = "<group>"; };
 		1CB6BC1B1C97564600741ED9 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +112,8 @@
 				1CB6BC221C97564600741ED9 /* AppDelegate.m */,
 				1CB6BC241C97564600741ED9 /* ViewController.h */,
 				1CB6BC251C97564600741ED9 /* ViewController.m */,
+				1C3F8CB21CBDA3D200215EC9 /* EncapsulatedNavVC.h */,
+				1C3F8CB31CBDA3D200215EC9 /* EncapsulatedNavVC.m */,
 				1CB67E501CBD80EF0067D6D6 /* PresentWithRadiusVC.h */,
 				1CB67E511CBD80EF0067D6D6 /* PresentWithRadiusVC.m */,
 				1CF3013C1CAD7D320023C011 /* View.xib */,
@@ -281,6 +286,7 @@
 				1CB67E521CBD80EF0067D6D6 /* PresentWithRadiusVC.m in Sources */,
 				1CB6BC201C97564600741ED9 /* main.m in Sources */,
 				1CB6BC2C1C97564600741ED9 /* HelloWorld.xcdatamodeld in Sources */,
+				1C3F8CB41CBDA3D200215EC9 /* EncapsulatedNavVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
