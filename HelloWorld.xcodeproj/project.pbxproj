@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C4F15111CBD75C400DDA173 /* SSSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F15101CBD75C400DDA173 /* SSSearchBar.m */; };
 		1CB6BC201C97564600741ED9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC1F1C97564600741ED9 /* main.m */; };
 		1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC221C97564600741ED9 /* AppDelegate.m */; };
 		1CB6BC261C97564600741ED9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC251C97564600741ED9 /* ViewController.m */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C4F150F1CBD75C400DDA173 /* SSSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSSearchBar.h; sourceTree = "<group>"; };
+		1C4F15101CBD75C400DDA173 /* SSSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSSearchBar.m; sourceTree = "<group>"; };
 		1CB6BC1B1C97564600741ED9 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CB6BC1F1C97564600741ED9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1CB6BC211C97564600741ED9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -106,6 +109,8 @@
 				1CB6BC221C97564600741ED9 /* AppDelegate.m */,
 				1CB6BC241C97564600741ED9 /* ViewController.h */,
 				1CB6BC251C97564600741ED9 /* ViewController.m */,
+				1C4F150F1CBD75C400DDA173 /* SSSearchBar.h */,
+				1C4F15101CBD75C400DDA173 /* SSSearchBar.m */,
 				1CF3013C1CAD7D320023C011 /* View.xib */,
 				1CB6BC2D1C97564600741ED9 /* Assets.xcassets */,
 				1CB6BC2F1C97564600741ED9 /* LaunchScreen.storyboard */,
@@ -274,6 +279,7 @@
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
 				1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */,
 				1CB6BC201C97564600741ED9 /* main.m in Sources */,
+				1C4F15111CBD75C400DDA173 /* SSSearchBar.m in Sources */,
 				1CB6BC2C1C97564600741ED9 /* HelloWorld.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
