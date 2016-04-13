@@ -20,7 +20,7 @@
 @property (nonatomic) CGFloat                   minimumImageXOffset;
 @property (nonatomic) CGFloat                   minimumImageYOffset;
 @property (nonatomic) CGFloat                   trackerScale;
-@property (nonatomic) CGFloat                   currentImageScale;
+//@property (nonatomic) CGFloat                   currentImageScale;
 @property (nonatomic) CGFloat                   calculatedImageWidth;
 @property (nonatomic) CGFloat                   calculatedImageHeight;
 
@@ -143,11 +143,11 @@
     
     [self setUpCroppingAndInsetRect];
     
-//    NSLog(@"super view: %@", self.superview);
-//    NSLog(@"super view x: %f", self.superview.bounds.origin.x);
-//    NSLog(@"super view y: %f", self.superview.bounds.origin.y);
-//    NSLog(@"super view width: %f", self.superview.bounds.size.width);
-//    NSLog(@"super view height: %f", self.superview.bounds.size.height);
+    //    NSLog(@"super view: %@", self.superview);
+    //    NSLog(@"super view x: %f", self.superview.bounds.origin.x);
+    //    NSLog(@"super view y: %f", self.superview.bounds.origin.y);
+    //    NSLog(@"super view width: %f", self.superview.bounds.size.width);
+    //    NSLog(@"super view height: %f", self.superview.bounds.size.height);
     
 }
 
@@ -173,6 +173,8 @@
 }
 
 - (void)setUpCroppingAndInsetRect{
+    
+    /* this centers the actual image position relative to the card size */
     CGRect rect = CGRectZero;
     CGFloat XOffset  = _overlayXOffset -  (_calculatedImageWidth - _overlaySize.width)/2;
     CGFloat YOffset  = _overlayYOffset -  (_calculatedImageHeight - _overlaySize.height)/2;
@@ -182,7 +184,8 @@
     rect.size.height = _calculatedImageHeight;
     [[self zoomingView] setFrame:rect];
     _insetRect       = rect;
-    NSLog(@"aFloat: %f %f %f %f", _insetRect.size.width, _insetRect.size.height, _insetRect.origin.x, _insetRect.origin.y);
+    NSLog(@"inset: %f %f %f %f", _insetRect.size.width, _insetRect.size.height, _insetRect.origin.x, _insetRect.origin.y);
+    NSLog(@"image rect: %f %f %f %f", _imageView.frame.size.width, _imageView.frame.size.height, _imageView.frame.origin.x, _imageView.frame.origin.y);
     _minimumImageXOffset = (_overlayXOffset + _overlaySize.width) - _calculatedImageWidth;
     _minimumImageYOffset = (_overlayYOffset + _overlaySize.height) - _calculatedImageHeight;
 }
@@ -241,7 +244,7 @@
         [pinch state] == UIGestureRecognizerStateChanged) {
         
         CGFloat currentScale = [[[pinch view].layer valueForKeyPath:@"transform.scale"] floatValue];
-        _currentImageScale = currentScale;
+        //_currentImageScale = currentScale;
         // Constants to adjust the max/min values of zoom
         const CGFloat kMaxScale = 2.2;
         const CGFloat kMinScale = 0.64;

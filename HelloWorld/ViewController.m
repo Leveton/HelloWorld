@@ -25,9 +25,14 @@
 @property (nonatomic, strong) UILabel     *label;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UIImageView *cropImageView;
-@property (nonatomic, strong) CropView      *cropView;
+@property (nonatomic, strong) CropView    *cropView;
 @property (nonatomic, strong) UIImageView *imageToCrop;
+@property (nonatomic, strong) UIView      *gestureView;
 @property (nonatomic, assign) CGFloat     trackerScale;
+@property (nonatomic, assign) CGFloat     cropViewXOffset;
+@property (nonatomic, assign) CGFloat     cropViewYOffset;
+@property (nonatomic, assign) CGFloat     minimumImageXOffset;
+@property (nonatomic, assign) CGFloat     minimumImageYOffset;
 @end
 
 @implementation ViewController
@@ -36,12 +41,11 @@
     [super viewDidLoad];
     
     /*view with gesture CANNOT be in layoutSubviews */
-    CGRect imageToCropFrame = [[self imageToCrop] frame];
-    imageToCropFrame.size      = CGSizeMake(imageToCropWidth, imageToCropWidth);
-    imageToCropFrame.origin.y  = (CGRectGetHeight([[self view] frame]) - imageToCropFrame.size.height)/2;
-    imageToCropFrame.origin.x  = (CGRectGetWidth([[self view] frame]) - imageToCropFrame.size.width)/2;
-    [[self imageToCrop] setFrame:imageToCropFrame];
-    
+    CGRect gestureFrame = [[self gestureView] frame];
+    gestureFrame.size      = CGSizeMake(imageToCropWidth, imageToCropWidth);
+    gestureFrame.origin.y  = (CGRectGetHeight([[self view] frame]) - gestureFrame.size.height)/2;
+    gestureFrame.origin.x  = (CGRectGetWidth([[self view] frame]) - gestureFrame.size.width)/2;
+    [[self gestureView] setFrame:gestureFrame];
 }
 
 - (void)viewWillLayoutSubviews{
@@ -66,6 +70,9 @@
     cropFrame.origin.y  = (CGRectGetHeight([[self view] frame]) - cropFrame.size.height)/2;
     cropFrame.origin.x  = (CGRectGetWidth([[self view] frame]) - cropFrame.size.width)/2;
     [[self cropView] setFrame:cropFrame];
+    
+    _cropViewXOffset = cropFrame.origin.x;
+    _cropViewYOffset = cropFrame.origin.y;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -114,15 +121,13 @@
 
 - (UIImageView *)imageToCrop{
     if (!_imageToCrop){
-        _imageToCrop = [[UIImageView alloc] initWithFrame:CGRectZero];
-        _image = [UIImage imageNamed:@"imageToCrop"];
-        [_imageToCrop setImage:_image];
-        [_imageToCrop setUserInteractionEnabled:YES];
-        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(didPan:)];
-        [_imageToCrop addGestureRecognizer:pan];
-        UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(didPinch:)];
-        [_imageToCrop addGestureRecognizer:pinch];
-        [[self view] addSubview:_imageToCrop];
+        _imageToCrop = [[UIImageView alloc]initWithFrame:CGRectZero];
+        [_imageToCrop.layer setZPosition:3.0f];
+        [_imageToCrop setBackgroundColor:[UIColor clearColor]];
+        [_imageToCrop setContentMode:UIViewContentModeScaleAspectFit];
+        [_imageToCrop setClipsToBounds:YES];
+        [[self gestureView] addSubview:_imageToCrop];
+        return _imageToCrop;
     }
     return _imageToCrop;
 }
@@ -140,97 +145,21 @@
     return _cropView;
 }
 
-#pragma mark - selectors
-
-- (void)didTap:(id)sender{
-    
-    [self presentCamera];
-}
-
-- (void)didTapCrop:(id)sender{
-    
-   
-}
-
-- (void)didPan:(UIPanGestureRecognizer *)pan{
-    
-    if (pan.state == UIGestureRecognizerStateChanged){
-        
-        CGPoint translation = [pan translationInView:pan.view.superview];
-        pan.view.center = CGPointMake(pan.view.center.x + translation.x,
-                                      pan.view.center.y + translation.y);
-        
-
-        
-        [pan setTranslation:CGPointMake(0, 0) inView:pan.view.superview];
+- (UIView *)gestureView{
+    if (!_gestureView){
+        _gestureView = [[UIView alloc]initWithFrame:CGRectZero];
+        [_gestureView setBackgroundColor:[UIColor clearColor]];
+        [_gestureView setUserInteractionEnabled:YES];
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc]initWithTarget:self action:@selector(didPan:)];
+        [_gestureView addGestureRecognizer:pan];
+        UIPinchGestureRecognizer *pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(didPinch:)];
+        [_gestureView addGestureRecognizer:pinch];
+        [_gestureView setHidden:YES];
+        [[self view] addSubview:_gestureView];
+        return _gestureView;
     }
     
-}
-
-- (void)didPinch:(UIPinchGestureRecognizer *)recognizer{
-    recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
-    recognizer.scale = 1;
-    
-//    pinch.view.transform = CGAffineTransformScale(pinch.view.transform, pinch.scale, pinch.scale);
-//    pinch.scale = 1;
-    
-//    if([pinch state] == UIGestureRecognizerStateBegan) {
-//        // Reset the last scale, necessary if there are multiple objects with different scales
-//        _trackerScale = [pinch scale];
-//        
-//        //NSLog(@"pinch width: %f", [pinch view].frame.size.width);
-//        //NSLog(@"pinch height: %f", [pinch view].frame.size.height);
-//    }
-//    
-//    if ([pinch state] == UIGestureRecognizerStateBegan ||
-//        [pinch state] == UIGestureRecognizerStateChanged) {
-//        
-//        CGFloat currentScale = [[[pinch view].layer valueForKeyPath:@"transform.scale"] floatValue];
-//        //_currentImageScale = currentScale;
-//        // Constants to adjust the max/min values of zoom
-//        const CGFloat kMaxScale = 2.2;
-//        const CGFloat kMinScale = 0.64;
-//        
-//        CGFloat newScale = 1 -  (_trackerScale - [pinch scale]);
-//        newScale = MIN(newScale, kMaxScale / currentScale);
-//        newScale = MAX(newScale, kMinScale / currentScale);
-//        CGAffineTransform transform = CGAffineTransformScale([[pinch view] transform], newScale, newScale);
-//        [pinch view].transform = transform;
-//        
-//        //[pinch setScale:1.0];
-//        
-//        _trackerScale = [pinch scale];  // Store the previous scale factor for the next pinch gesture call
-//        
-//        //NSLog(@"pinch width: %f", [pinch view].frame.size.width);
-//        //NSLog(@"pinch height: %f", [pinch view].frame.size.height);
-//    }
-}
-
-- (UIImage *)croppedImage{
-    return [_image rotatedImageWithtransform:self.imageViewRotation croppedToRect:[self zoomedCropRect]];;
-}
-
-- (CGAffineTransform)imageViewRotation{
-    return _imageToCrop.transform;
-}
-
-- (CGRect)zoomedCropRect{
-    //CGRect cropRect = [_cropView convertRect:_cropView.frame toView:_zoomingView];
-    CGRect cropRect = [_cropView convertRect:_cropView.frame toView:self.view];
-    
-    CGSize size = _image.size;
-    
-    CGFloat ratio = 1.0f;
-    
-    //ratio = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _insetRect)) / size.width;
-    ratio = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, self.view.frame)) / size.width;
-    
-    CGRect zoomedCropRect = CGRectMake(cropRect.origin.x / ratio,
-                                       cropRect.origin.y / ratio,
-                                       cropRect.size.width / ratio,
-                                       cropRect.size.height / ratio);
-    
-    return zoomedCropRect;
+    return _gestureView;
 }
 
 #pragma mark - camera
@@ -245,7 +174,7 @@
     [camera setAllowsPhotoRoll:YES];
     [camera setDelegate:self];
     [camera setShouldResizeToViewFinder:NO];
-    [camera setCardSize:CGSizeMake(imageWidth*2, imageWidth*2)];
+    [camera setCardSize:CGSizeMake(imageWidth, imageWidth)];
     [self presentViewController:camera animated:YES completion:^{
         
         [[camera view] setNeedsLayout];
@@ -276,15 +205,158 @@
     __block UIImage *anImage = image;
     [controller dismissViewControllerAnimated:YES completion:^{
         
-        anImage = [anImage makeRoundedImage:anImage radius:kImageRadius];
+        //anImage = [anImage makeRoundedImage:anImage radius:kImageRadius];
         
         if (anImage){
-            [[self imageView] setImage:anImage];
+            //[[self imageView] setImage:anImage];
+            _image = anImage;
+            
+            //[[self imageToCrop] setFrame:[self frameForImageViewWithImage:anImage]];
+            [[self gestureView] setFrame:[self frameForImageViewWithImage:anImage]];
+            //[[self imageToCrop] setFrame:[[self gestureView] frame]];
+            
+            CGRect imageFrame = [[self imageToCrop] frame];
+            imageFrame.origin.x     = 0.0f;
+            imageFrame.origin.y     = 0.0f;
+            imageFrame.size.width   = _gestureView.bounds.size.width;
+            imageFrame.size.height  = _gestureView.bounds.size.height;
+            [[self imageToCrop] setFrame:imageFrame];
+            
+            _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - _imageToCrop.bounds.size.width;
+            _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.width;
+            [[self imageToCrop] setImage:_image];
+            [[self gestureView] setHidden:NO];
+            
         }else{
             NSLog(@"reached no animage");
         }
         
     }];
 }
+
+#pragma mark - selectors
+
+
+- (CGRect)frameForImageViewWithImage:(UIImage *)image{
+    
+    CGFloat proportion;
+    CGFloat newHeight;
+    CGFloat newWidth;
+    
+    if (image.size.width >= image.size.height){
+        /* make the height 5/4ths the size of the crop view */
+        proportion            = image.size.width/image.size.height;
+        newHeight             = [[self cropView] bounds].size.height * (5.0f/4.0f);
+        newWidth              = newHeight * proportion;
+        
+    }else{
+        /* make the width 5/4ths the size of the crop view */
+        proportion             = image.size.height/image.size.width;
+        newWidth               = [[self cropView] bounds].size.width * (5.0f/4.0f);
+        newHeight              = newWidth * proportion;
+    }
+    
+    CGRect  dynamicImageViewFrame = [[self gestureView] frame];
+    dynamicImageViewFrame.size.width  = newWidth;
+    dynamicImageViewFrame.size.height = newHeight;
+    dynamicImageViewFrame.origin.x    = _cropViewXOffset -  (newWidth - _cropView.bounds.size.width)/2;
+    dynamicImageViewFrame.origin.y    = _cropViewYOffset -  (newHeight - _cropView.bounds.size.height)/2;
+    return dynamicImageViewFrame;
+}
+
+- (void)didTap:(id)sender{
+    [self presentCamera];
+}
+
+- (void)didTapCrop:(id)sender{
+    [[self cropImageView] setImage:self.croppedImage];
+}
+
+- (void)didPan:(UIPanGestureRecognizer *)pan{
+    
+    if (pan.state == UIGestureRecognizerStateChanged){
+        
+        CGRect imageFrame = [[pan view] frame];
+        
+        CGPoint translation = [pan translationInView:pan.view.superview];
+        pan.view.center = CGPointMake(pan.view.center.x + translation.x,
+                                      pan.view.center.y + translation.y);
+        
+        CGFloat originX = pan.view.frame.origin.x;
+        CGFloat originY = pan.view.frame.origin.y;
+        
+        
+        if (originX < _cropViewXOffset && originY < _cropViewYOffset && originX > _minimumImageXOffset && originY > _minimumImageYOffset){
+            [pan setTranslation:CGPointMake(0, 0) inView:pan.view.superview];
+        }else{
+            [[pan view] setFrame:imageFrame];
+            [pan setTranslation:CGPointMake(0, 0) inView:pan.view.superview];
+        }
+    }
+    
+    if (pan.state == UIGestureRecognizerStateEnded){
+        _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - pan.view.frame.size.width;
+        _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - pan.view.frame.size.height;
+    }
+    
+}
+
+- (void)didPinch:(UIPinchGestureRecognizer *)recognizer{
+    //    recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
+    //    recognizer.scale = 1;
+    
+    
+    
+    
+    
+    if([recognizer state] == UIGestureRecognizerStateBegan) {
+        // Reset the last scale, necessary if there are multiple objects with different scales
+        _trackerScale = [recognizer scale];
+        
+        //NSLog(@"pinch width: %f", [pinch view].frame.size.width);
+        //NSLog(@"pinch height: %f", [pinch view].frame.size.height);
+    }
+    
+    if ([recognizer state] == UIGestureRecognizerStateBegan ||
+        [recognizer state] == UIGestureRecognizerStateChanged) {
+        
+        CGFloat currentScale = [[[recognizer view].layer valueForKeyPath:@"transform.scale"] floatValue];
+        //_currentImageScale = currentScale;
+        // Constants to adjust the max/min values of zoom
+        const CGFloat kMaxScale = 2.2;
+        const CGFloat kMinScale = 0.64;
+        
+        CGFloat newScale = 1 -  (_trackerScale - [recognizer scale]);
+        newScale = MIN(newScale, kMaxScale / currentScale);
+        newScale = MAX(newScale, kMinScale / currentScale);
+        CGAffineTransform transform = CGAffineTransformScale([[recognizer view] transform], newScale, newScale);
+        [recognizer view].transform = transform;
+        
+        [recognizer setScale:1.0];
+        
+        _trackerScale = [recognizer scale];  // Store the previous scale factor for the next pinch gesture call
+        
+        //NSLog(@"pinch width: %f", [pinch view].frame.size.width);
+        //NSLog(@"pinch height: %f", [pinch view].frame.size.height);
+    }
+}
+
+- (UIImage *)croppedImage{
+    return [_image rotatedImageWithtransform:self.imageViewRotation croppedToRect:[self zoomedCropRect]];;
+}
+
+- (CGAffineTransform)imageViewRotation{
+    return _imageToCrop.transform;
+}
+
+- (CGRect)zoomedCropRect{
+    CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_gestureView];
+    CGSize size = _image.size;
+    CGFloat ratio = 1.0f;
+    ratio = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _gestureView.bounds)) / size.width;
+    CGRect zoomedCropRect = CGRectMake(cropRect.origin.x / ratio,cropRect.origin.y / ratio,cropRect.size.width / ratio,cropRect.size.height / ratio);
+    return zoomedCropRect;
+}
+
 
 @end

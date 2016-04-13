@@ -991,20 +991,24 @@
     savedImage = [savedImage normalizedImage];
     
     [[self photoRollController] dismissViewControllerAnimated:YES completion:^{
-        _imageIsSet = YES;
-        [[self cropView] setImage:savedImage];
-        CGFloat width = savedImage.size.width;
-        CGFloat height = savedImage.size.height;
-        CGFloat length = MIN(width, height);
-        [self setImageCropRect:CGRectMake((width - length) / 2, (height - length) / 2, length, length)];
-        [[self capturedImageView] setHidden:YES];
-        [[self captureVideoPreviewLayer] setHidden:YES];
-        [[self photoRollButton] setHidden:YES];
-        [[self switchCameraBtn] setHidden:YES];
-        [[self cardOverlay] setUserInteractionEnabled:NO];
-        [[self captureBtn] removeTarget:self action:@selector(didTapCapturePhoto) forControlEvents:UIControlEventTouchUpInside];
-        [[self captureBtn] addTarget:self action:@selector(didTapCropPhoto) forControlEvents:UIControlEventTouchUpInside];
-        [[self view] setNeedsLayout];
+//        _imageIsSet = YES;
+//        [[self cropView] setImage:savedImage];
+//        CGFloat width = savedImage.size.width;
+//        CGFloat height = savedImage.size.height;
+//        CGFloat length = MIN(width, height);
+//        [self setImageCropRect:CGRectMake((width - length) / 2, (height - length) / 2, length, length)];
+//        [[self capturedImageView] setHidden:YES];
+//        [[self captureVideoPreviewLayer] setHidden:YES];
+//        [[self photoRollButton] setHidden:YES];
+//        [[self switchCameraBtn] setHidden:YES];
+//        [[self cardOverlay] setUserInteractionEnabled:NO];
+//        [[self captureBtn] removeTarget:self action:@selector(didTapCapturePhoto) forControlEvents:UIControlEventTouchUpInside];
+//        [[self captureBtn] addTarget:self action:@selector(didTapCropPhoto) forControlEvents:UIControlEventTouchUpInside];
+//        [[self view] setNeedsLayout];
+        
+        if ([[self delegate] respondsToSelector:@selector(CameraViewController:didFinishCroppingImage:transform:cropRect:)]) {
+            [[self delegate] CameraViewController:self didFinishCroppingImage:savedImage transform:self.cropView.rotation cropRect:self.cropView.zoomedCropRect];
+        }
     }];
     
 }
