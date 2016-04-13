@@ -6,6 +6,15 @@
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 
+
+
+
+
+//use the expanding table view cells in profile
+
+
+
+
 #import "ViewController.h"
 #import "AppDelegate.h"
 #import "MELExpandingTextCell.h"
