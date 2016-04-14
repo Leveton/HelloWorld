@@ -10,17 +10,19 @@
 /*Cropper - Only check out of bounds on cropper if it's at the stop event and then pop back*/
 
 
-#import "ViewController.h"
+#import "superCropViewController.h"
 #import "CameraViewController.h"
 #import "UIImage+Additions.h"
-//#import "UIImage+PhotoCrop.h"
+#import "MELSuperCropView.h"
+#import "MELDynamicCropView.h"
 #import "CropView.h"
 
 #define imageWidth                                       (320.0f)
 #define imageToCropWidth                                 (340.0f)
 #define kImageRadius                                     (8.0f)
 
-@interface ViewController ()<CameraViewControllerDelegate>
+@interface superCropViewController ()<CameraViewControllerDelegate, MELSuperCropDelegate>
+@property (nonatomic, strong) MELSuperCropView     *superCrop;
 @property (nonatomic, strong) UIImage     *image;
 @property (nonatomic, strong) UILabel     *label;
 @property (nonatomic, strong) UIImageView *imageView;
@@ -35,7 +37,7 @@
 @property (nonatomic, assign) CGFloat     minimumImageYOffset;
 @end
 
-@implementation ViewController
+@implementation superCropViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -50,6 +52,7 @@
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
+    
     CGRect labelFrame = [[self label] frame];
     labelFrame.origin.y    = 20.0f;
     labelFrame.size.height = 60.0f;
@@ -144,7 +147,7 @@
         [[_cropView layer] setOpacity:0.2f];
         [[_cropView layer] setZPosition:1.0f];
         [_cropView setUserInteractionEnabled:YES];
-        [[self view] addSubview:_cropView];
+        //[[self view] addSubview:_cropView];
         return _cropView;
     }
     return _cropView;
@@ -215,22 +218,29 @@
         if (anImage){
             //[[self imageView] setImage:anImage];
             _image = anImage;
+            CGRect frame = [[self cropView] frame];
+            frame.size.width = 500.0f;
+            frame.size.height = 500.0f;
+            MELSuperCropView *crop = [[MELSuperCropView alloc]initWithFrame:[[self cropView]frame] cropSize:CGSizeMake(imageWidth, imageWidth)];
+            [crop setDelegate:self];
+            [crop setImage:_image];
+            [[self view] addSubview:crop];
             
-            //[[self imageToCrop] setFrame:[self frameForGestureViewWithImage:image]];
-            [[self gestureView] setFrame:[self frameForGestureViewWithImage:anImage]];
-            //[[self imageToCrop] setFrame:[[self gestureView] frame]];
-            
-            CGRect imageFrame = [[self imageToCrop] frame];
-            imageFrame.origin.x     = 0.0f;
-            imageFrame.origin.y     = 0.0f;
-            imageFrame.size.width   = _gestureView.bounds.size.width;
-            imageFrame.size.height  = _gestureView.bounds.size.height;
-            [[self imageToCrop] setFrame:imageFrame];
-            
-            _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - _imageToCrop.bounds.size.width;
-            _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.height;
-            [[self imageToCrop] setImage:_image];
-            [[self gestureView] setHidden:NO];
+//            //[[self imageToCrop] setFrame:[self frameForGestureViewWithImage:image]];
+//            [[self gestureView] setFrame:[self frameForGestureViewWithImage:anImage]];
+//            //[[self imageToCrop] setFrame:[[self gestureView] frame]];
+//            
+//            CGRect imageFrame = [[self imageToCrop] frame];
+//            imageFrame.origin.x     = 0.0f;
+//            imageFrame.origin.y     = 0.0f;
+//            imageFrame.size.width   = _gestureView.bounds.size.width;
+//            imageFrame.size.height  = _gestureView.bounds.size.height;
+//            [[self imageToCrop] setFrame:imageFrame];
+//            
+//            _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - _imageToCrop.bounds.size.width;
+//            _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.height;
+//            [[self imageToCrop] setImage:_image];
+//            [[self gestureView] setHidden:NO];
             
         }else{
             NSLog(@"reached no animage");
@@ -279,6 +289,7 @@
 
 - (void)didPan:(UIPanGestureRecognizer *)pan{
     
+    NSLog(@"did pan super");
     if (pan.state == UIGestureRecognizerStateChanged){
         
         CGRect imageFrame = [[pan view] frame];
@@ -310,7 +321,7 @@
     //        recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
     //        recognizer.scale = 1;
     
-    
+    NSLog(@"did pinch super");
     
     
     

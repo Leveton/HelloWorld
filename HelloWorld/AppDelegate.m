@@ -8,9 +8,11 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "superCropViewController.h"
 
 @interface AppDelegate ()
 @property (nonatomic, strong) ViewController *viewController;
+@property (nonatomic, strong) superCropViewController *superCropVC;
 @end
 
 @implementation AppDelegate
@@ -19,7 +21,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [[self window] setRootViewController:[self viewController]];
+    [[self window] setRootViewController:[self superCropVC]];
     [[self window] makeKeyAndVisible];
     
     return YES;
@@ -136,6 +138,14 @@
         [[_viewController view] setBackgroundColor:[UIColor whiteColor]];
     }
     return _viewController;
+}
+
+- (superCropViewController *)superCropVC{
+    if (!_superCropVC){
+        _superCropVC = [[superCropViewController alloc] init];
+        [[_superCropVC view] setBackgroundColor:[UIColor whiteColor]];
+    }
+    return _superCropVC;
 }
 
 @end
