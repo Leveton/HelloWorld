@@ -16,6 +16,7 @@
 #import "ViewController.h"
 #import "PresentWithRadiusVC.h"
 #import "EncapsulatedNavVC.h"
+#import "MessageViewController.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) UILabel *label;
@@ -84,11 +85,13 @@
     [nav setModalPresentationStyle:UIModalPresentationPageSheet];
     //[nav setModalPresentationStyle:UIModalPresentationFormSheet];
     //[nav setModalPresentationStyle:UIModalPresentationCustom];
-    //[nav setPreferredContentSize:CGSizeMake(600, 10000)];
-    //[self presentViewController:nav animated:YES completion:nil];
+    [nav setPreferredContentSize:CGSizeMake(600, 10000)];
+    [self presentViewController:nav animated:YES completion:nil];
     
-    EncapsulatedNavVC *vc1 = [EncapsulatedNavVC new];
-    [self presentViewController:vc1 animated:YES completion:nil];
+    //MessageViewController *vc1 = [MessageViewController new];
+    //[[vc1 view] setBackgroundColor:[UIColor redColor]];
+    //[vc1 setTransitioningDelegate:[self transitioningDelegate]];
+    //[self presentViewController:vc1 animated:YES completion:nil];
 }
 
 - (CGRect)horizontallyCenteredFrameForChildFrame:(CGRect)childRect{
