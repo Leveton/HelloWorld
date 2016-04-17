@@ -19,6 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSLog(@"enabled: %ld", (long)self.view.userInteractionEnabled);
 }
 
 - (void)viewWillLayoutSubviews{
@@ -65,7 +66,7 @@
     if (!_containerView){
         _containerView = [[UIView alloc] initWithFrame:CGRectZero];
         [_containerView setBackgroundColor:[UIColor blueColor]];
-        [[self view] addSubview:_containerView];
+        //[[self view] addSubview:_containerView];
         return _containerView;
     }
     return _containerView;
@@ -76,7 +77,7 @@
         _imageView = [[ImageViewTouchTarget alloc] initWithFrame:CGRectZero];
         [_imageView setImage:[UIImage imageNamed:@"Church"]];
         [_imageView setUserInteractionEnabled:YES];
-        [[self containerView] addSubview:_imageView];
+        [[self view] addSubview:_imageView];
         return _imageView;
     }
     return _imageView;

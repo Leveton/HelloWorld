@@ -11,19 +11,33 @@
 @implementation ImageViewTouchTarget
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event{
-//    CGFloat radius = 100.0;
-//    CGRect frame = CGRectMake(-radius, -radius,
-//                              self.frame.size.width + radius,
-//                              self.frame.size.height + radius);
-//    
-//    if (CGRectContainsPoint(frame, point)) {
-//        return self;
+    CGFloat radius = 100.0;
+    CGRect frame = CGRectMake(-radius, -radius,
+                              self.frame.size.width + radius,
+                              self.frame.size.height + radius);
+    
+    if (CGRectContainsPoint(frame, point)) {
+        NSLog(@"reached");
+        return self;
+    }
+    return nil;
+    
+//    //UIView *view = [super hitTest:point withEvent:event];
+//    UIView *view = self;
+//    NSLog(@"aFloat: %f %f %f %f", view.frame.size.width, view.frame.size.height, view.frame.origin.x, view.frame.origin.y);
+//    if (CGRectContainsPoint(view.frame, point)) {
+//        return view;
 //    }
 //    return nil;
+}
+
+- (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    if (CGRectContainsPoint(self.frame, point)){
+        NSLog(@"reached yes");
+       return YES;
+    }
     
-    UIView *view = [super hitTest:point withEvent:event];
-    NSLog(@"aFloat: %f %f %f %f", view.frame.size.width, view.frame.size.height, view.frame.origin.x, view.frame.origin.y);
-    return view;
+    return [super pointInside:point withEvent:event];
 }
 
 @end
