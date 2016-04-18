@@ -21,7 +21,7 @@
 #define imageToCropWidth                                 (340.0f)
 #define kImageRadius                                     (8.0f)
 
-@interface superCropViewController ()<CameraViewControllerDelegate, MELSuperCropDelegate>
+@interface superCropViewController ()<CameraViewControllerDelegate, MELSuperCropDelegate, MELDynamicCropViewDelegate>
 @property (nonatomic, strong) MELSuperCropView     *superCrop;
 @property (nonatomic, strong) UIImage     *image;
 @property (nonatomic, strong) UILabel     *label;
@@ -221,7 +221,7 @@
             CGRect frame = [[self cropView] frame];
             frame.size.width = 500.0f;
             frame.size.height = 500.0f;
-            MELSuperCropView *crop = [[MELSuperCropView alloc]initWithFrame:[[self cropView]frame] cropSize:CGSizeMake(imageWidth, imageWidth)];
+            MELDynamicCropView *crop = [[MELDynamicCropView alloc]initWithFrame:[[self cropView]frame] cropSize:CGSizeMake(imageWidth, imageWidth) maximumRadius:600.0f];
             [crop setDelegate:self];
             [crop setImage:_image];
             [[self view] addSubview:crop];
@@ -352,9 +352,10 @@
         
         _trackerScale = [recognizer scale];  // Store the previous scale factor for the next pinch gesture call
         
-        //NSLog(@"pinch width: %f", [pinch view].frame.size.width);
-        //NSLog(@"pinch height: %f", [pinch view].frame.size.height);
+//        NSLog(@"pinch width: %f", [recognizer view].frame.size.width);
+//        NSLog(@"pinch height: %f", [recognizer view].frame.size.height);
     }
+    
 }
 
 - (UIImage *)croppedImage{
