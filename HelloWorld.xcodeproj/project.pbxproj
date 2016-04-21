@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C1EA8ED1CC961B800DC6CD1 /* MELTextViewTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C1EA8EC1CC961B800DC6CD1 /* MELTextViewTableViewCell.m */; };
 		1CB6BC201C97564600741ED9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC1F1C97564600741ED9 /* main.m */; };
 		1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC221C97564600741ED9 /* AppDelegate.m */; };
 		1CB6BC261C97564600741ED9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC251C97564600741ED9 /* ViewController.m */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1C1EA8EB1CC961B800DC6CD1 /* MELTextViewTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MELTextViewTableViewCell.h; sourceTree = "<group>"; };
+		1C1EA8EC1CC961B800DC6CD1 /* MELTextViewTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MELTextViewTableViewCell.m; sourceTree = "<group>"; };
 		1CB6BC1B1C97564600741ED9 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CB6BC1F1C97564600741ED9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1CB6BC211C97564600741ED9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -108,6 +111,8 @@
 				1CB6BC221C97564600741ED9 /* AppDelegate.m */,
 				1CB6BC241C97564600741ED9 /* ViewController.h */,
 				1CB6BC251C97564600741ED9 /* ViewController.m */,
+				1C1EA8EB1CC961B800DC6CD1 /* MELTextViewTableViewCell.h */,
+				1C1EA8EC1CC961B800DC6CD1 /* MELTextViewTableViewCell.m */,
 				1CED9D961CB7F284002CB12E /* MELExpandingTextCell.h */,
 				1CED9D971CB7F284002CB12E /* MELExpandingTextCell.m */,
 				1CB6BC2D1C97564600741ED9 /* Assets.xcassets */,
@@ -276,6 +281,7 @@
 			files = (
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
 				1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */,
+				1C1EA8ED1CC961B800DC6CD1 /* MELTextViewTableViewCell.m in Sources */,
 				1CB6BC201C97564600741ED9 /* main.m in Sources */,
 				1CB6BC2C1C97564600741ED9 /* HelloWorld.xcdatamodeld in Sources */,
 				1CED9D981CB7F284002CB12E /* MELExpandingTextCell.m in Sources */,

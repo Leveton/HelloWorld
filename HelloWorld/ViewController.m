@@ -18,6 +18,7 @@
 #import "ViewController.h"
 #import "AppDelegate.h"
 #import "MELExpandingTextCell.h"
+#import "MELTextViewTableViewCell.h"
 
 @interface ViewController ()<UITableViewDelegate, UITableViewDataSource, MELExpandingTextCellDelegate>
 @property (nonatomic, strong) UILabel     *label;
@@ -84,6 +85,12 @@
         [[cell textView] setText:@"lorem ipsum"];
         [[cell placeholder] setText:@"hi mike"];
         [[cell placeholder] setHidden:YES];
+        [cell setEditing:YES];
+        return cell;
+    }
+    
+    if (indexPath.row == 5){
+        MELTextViewTableViewCell *cell = [MELTextViewTableViewCell new];
         [cell setEditing:YES];
         return cell;
     }
