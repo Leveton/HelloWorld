@@ -146,6 +146,7 @@
     _cropViewXOffset = cropFrame.origin.x;
     _cropViewYOffset = cropFrame.origin.y;
     NSLog(@"setCropFrame _cropViewYOffset: %f", _cropViewYOffset);
+    //
 }
 
 - (void)setImage:(UIImage *)image{
