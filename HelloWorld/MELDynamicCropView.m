@@ -28,6 +28,7 @@
 @property (nonatomic, assign) CGFloat     cropViewYOffset;
 @property (nonatomic, assign) CGFloat     minimumImageXOffset;
 @property (nonatomic, assign) CGFloat     minimumImageYOffset;
+@property (nonatomic, assign) CGAffineTransform     originalTransform;
 @end
 
 @implementation MELDynamicCropView
@@ -137,7 +138,6 @@
 
 - (void)setCropSize:(CGSize)cropSize{
     _cropSize = cropSize;
-    NSLog(@"setCropSize width: %f", _cropSize.width);
 }
 
 - (void)setCropFrame:(CGRect)cropFrame{
@@ -145,8 +145,6 @@
     [[self cropView] setFrame:_cropFrame];
     _cropViewXOffset = cropFrame.origin.x;
     _cropViewYOffset = cropFrame.origin.y;
-    NSLog(@"setCropFrame _cropViewYOffset: %f", _cropViewYOffset);
-    //
 }
 
 - (void)setImage:(UIImage *)image{
@@ -156,13 +154,9 @@
     [self setCropFrame:[self centeredCropFrame]];
     [[self gestureView] setFrame:[self frameForGestureViewWithImage:_image]];
     
-    CGRect gestureBounds = [[self gestureView] bounds];
-    gestureBounds.size.width = _gestureView.frame.size.width;
-    gestureBounds.size.height = _gestureView.frame.size.height;
-    [[self gestureView] setBounds:gestureBounds];
+    _originalTransform = _gestureView.transform;
     
-    //CGRect imageFrame = [[self imageToCrop] frame];
-    CGRect imageFrame = CGRectZero;
+    CGRect imageFrame = [[self imageToCrop] frame];
     imageFrame.size.width   = _gestureView.bounds.size.width;
     imageFrame.size.height  = _gestureView.bounds.size.height;
     [[self imageToCrop] setFrame:imageFrame];
@@ -179,17 +173,17 @@
     
     [[self imageToCrop] setImage:_image];
     
-    NSLog(@"_cropViewXOffset: %f", _cropViewXOffset);
-    NSLog(@"_cropView.bounds.size.width: %f", _cropView.bounds.size.width);
-    NSLog(@"_imageToCrop.bounds.size.width: %f", _imageToCrop.bounds.size.width);
-    NSLog(@"_imageToCrop.frame.size.width: %f", _imageToCrop.frame.size.width);
-    NSLog(@"_imageToCrop.frame.x: %f", _imageToCrop.frame.origin.x);
-    NSLog(@"_imageToCrop.frame.y: %f", _imageToCrop.frame.origin.y);
+//    NSLog(@"_cropViewXOffset: %f", _cropViewXOffset);
+//    NSLog(@"_cropView.bounds.size.width: %f", _cropView.bounds.size.width);
+//    NSLog(@"_imageToCrop.bounds.size.width: %f", _imageToCrop.bounds.size.width);
+//    NSLog(@"_imageToCrop.frame.size.width: %f", _imageToCrop.frame.size.width);
+//    NSLog(@"_imageToCrop.frame.x: %f", _imageToCrop.frame.origin.x);
+//    NSLog(@"_imageToCrop.frame.y: %f", _imageToCrop.frame.origin.y);
     
     _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - _imageToCrop.bounds.size.width;
     _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.height;
-    NSLog(@"_minimumImageXOffset: %f", _minimumImageXOffset);
-    NSLog(@"_minimumImageYOffset: %f", _minimumImageYOffset);
+    //NSLog(@"_minimumImageXOffset: %f", _minimumImageXOffset);
+    //NSLog(@"_minimumImageYOffset: %f", _minimumImageYOffset);
 }
 
 #pragma mark - selectors
@@ -204,35 +198,24 @@
         /* make the height 5/4ths the size of the crop view */
         proportion            = image.size.width/image.size.height;
         newHeight             = _cropSize.height * (5.0f/4.0f);
-        NSLog(@"newWidth: %f", newHeight);
-        NSLog(@"size width: %f", image.size.width);
-        NSLog(@"size height: %f", image.size.height);
         newWidth              = newHeight * proportion;
         
     }else{
         /* make the width 5/4ths the size of the crop view */
         proportion             = image.size.height/image.size.width;
         newWidth               = _cropSize.width * (5.0f/4.0f);
-        NSLog(@"newWidth: %f", newWidth);
-        NSLog(@"size width: %f", image.size.width);
         newHeight              = newWidth * proportion;
     }
-    NSLog(@"_cropViewXOffset: %f", _cropViewXOffset);
-    NSLog(@"_cropViewYOffset: %f", _cropViewYOffset);
-    NSLog(@"_cropView.bounds.size.width: %f", _cropView.bounds.size.width);
-    NSLog(@"_cropView.bounds.size.height: %f", _cropView.bounds.size.height);
     CGRect  dynamicImageViewFrame = [[self gestureView] frame];
     dynamicImageViewFrame.size.width  = newWidth;
     dynamicImageViewFrame.size.height = newHeight;
     dynamicImageViewFrame.origin.x    = _cropViewXOffset -  (newWidth - _cropView.bounds.size.width)/2;
     dynamicImageViewFrame.origin.y    = _cropViewYOffset -  (newHeight - _cropView.bounds.size.height)/2;
-//    NSLog(@"frameForGestureViewWithImage frame: %f %f %f %f", _cropSize.width, _cropSize.height, _cropViewXOffset, _cropViewYOffset);
     return dynamicImageViewFrame;
 }
 
 - (void)didPan:(UIPanGestureRecognizer *)pan{
     if (pan.state == UIGestureRecognizerStateChanged){
-        NSLog(@"did pan");
         CGRect imageFrame = [[pan view] frame];
         
         CGPoint translation = [pan translationInView:pan.view.superview];
@@ -259,31 +242,26 @@
 }
 
 - (void)didPinch:(UIPinchGestureRecognizer *)recognizer{
-    NSLog(@"did pinch");
     recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
     recognizer.scale = 1;
     
     if ([recognizer state] == UIGestureRecognizerStateEnded){
-        NSLog(@"reached ended");
-        NSLog(@"pinch width: %f", [recognizer view].frame.size.width);
-        NSLog(@"pinch height: %f", [recognizer view].frame.size.height);
         
         if ([recognizer view].frame.size.width < _cropSize.width || [recognizer view].frame.size.height < _cropSize.height){
-            NSLog(@"reached too small");
-            [[self gestureView] removeGestureRecognizer:[self pan]];
-            [[self gestureView] removeGestureRecognizer:[self pinch]];
+            //[[self gestureView] removeGestureRecognizer:[self pan]];
+            //[[self gestureView] removeGestureRecognizer:[self pinch]];
             [UIView animateWithDuration:0.2f
                                   delay:0.0f
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
+                                 [[self gestureView] setTransform:_originalTransform];
                                  [self setImage:_copiedImage];
-                                 //[[recognizer view] setFrame:_originalGestureFrame];
-                                 //[[self imageToCrop] setFrame:_originalGestureFrame];
+                            
                                  
                              }
                              completion:^(BOOL finished) {
-                                 [[self gestureView] addGestureRecognizer:[self pan]];
-                                 [[self gestureView] addGestureRecognizer:[self pinch]];
+                                 //[[self gestureView] addGestureRecognizer:[self pan]];
+                                 //[[self gestureView] addGestureRecognizer:[self pinch]];
                              }];
         }
     }
