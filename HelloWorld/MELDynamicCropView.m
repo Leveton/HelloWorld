@@ -247,21 +247,21 @@
     
     if ([recognizer state] == UIGestureRecognizerStateEnded){
         
-        if ([recognizer view].frame.size.width < _cropSize.width || [recognizer view].frame.size.height < _cropSize.height){
-            //[[self gestureView] removeGestureRecognizer:[self pan]];
-            //[[self gestureView] removeGestureRecognizer:[self pinch]];
+        CGFloat gestureWidth  = [recognizer view].frame.size.width;
+        CGFloat gestureHeight = [recognizer view].frame.size.height;
+        
+        if (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > self.frame.size.width || gestureHeight > self.frame.size.height){
+            
             [UIView animateWithDuration:0.2f
                                   delay:0.0f
                                 options:UIViewAnimationOptionCurveLinear
                              animations:^{
                                  [[self gestureView] setTransform:_originalTransform];
                                  [self setImage:_copiedImage];
-                            
                                  
                              }
                              completion:^(BOOL finished) {
-                                 //[[self gestureView] addGestureRecognizer:[self pan]];
-                                 //[[self gestureView] addGestureRecognizer:[self pinch]];
+                                 
                              }];
         }
     }
