@@ -9,6 +9,7 @@
 
 /**
  TODO: you have to logout every dimension and figure out what's being screwed up in setImage:
+ The radius is the largest the view can get minus it's maximum x/y offset.
  **/
 
 #import "MELDynamicCropView.h"
@@ -136,7 +137,7 @@
 
 - (void)setCropSize:(CGSize)cropSize{
     _cropSize = cropSize;
-    NSLog(@"crop width: %f", _cropSize.width);
+    NSLog(@"setCropSize width: %f", _cropSize.width);
 }
 
 - (void)setCropFrame:(CGRect)cropFrame{
@@ -144,32 +145,50 @@
     [[self cropView] setFrame:_cropFrame];
     _cropViewXOffset = cropFrame.origin.x;
     _cropViewYOffset = cropFrame.origin.y;
-    NSLog(@"crop Y: %f", _cropViewYOffset);
+    NSLog(@"setCropFrame _cropViewYOffset: %f", _cropViewYOffset);
 }
 
 - (void)setImage:(UIImage *)image{
     _image = image;
     _copiedImage = [_image copy];
-    NSLog(@"set imsge: %@", _image);
     
     [self setCropFrame:[self centeredCropFrame]];
     [[self gestureView] setFrame:[self frameForGestureViewWithImage:_image]];
-//    CGRect frame = [[self gestureView] frame];
-//    frame.origin.x = self.frame.origin.x;
-//    frame.origin.y = self.frame.origin.y;
-//    [self setFrame:frame];
     
-    CGRect imageFrame = [[self imageToCrop] frame];
+    CGRect gestureBounds = [[self gestureView] bounds];
+    gestureBounds.size.width = _gestureView.frame.size.width;
+    gestureBounds.size.height = _gestureView.frame.size.height;
+    [[self gestureView] setBounds:gestureBounds];
+    
+    //CGRect imageFrame = [[self imageToCrop] frame];
+    CGRect imageFrame = CGRectZero;
     imageFrame.size.width   = _gestureView.bounds.size.width;
     imageFrame.size.height  = _gestureView.bounds.size.height;
     [[self imageToCrop] setFrame:imageFrame];
     
+    NSLog(@"_gestureView.bounds.size.width: %f", _gestureView.bounds.size.width);
+    NSLog(@"_gestureView.bounds.size.height: %f", _gestureView.bounds.size.width);
+    NSLog(@"_gestureView.bounds.origin.x: %f", _gestureView.bounds.origin.x);
+    NSLog(@"_gestureView.bounds.origin.y: %f", _gestureView.bounds.origin.y);
+    
+    NSLog(@"_gestureView.frame.size.width: %f", _gestureView.frame.size.width);
+    NSLog(@"_gestureView.frame.size.height: %f", _gestureView.frame.size.height);
+    NSLog(@"_gestureView.frame.origin.x: %f", _gestureView.frame.origin.x);
+    NSLog(@"_gestureView.frame.origin.y: %f", _gestureView.frame.origin.y);
+    
     [[self imageToCrop] setImage:_image];
+    
+    NSLog(@"_cropViewXOffset: %f", _cropViewXOffset);
+    NSLog(@"_cropView.bounds.size.width: %f", _cropView.bounds.size.width);
+    NSLog(@"_imageToCrop.bounds.size.width: %f", _imageToCrop.bounds.size.width);
+    NSLog(@"_imageToCrop.frame.size.width: %f", _imageToCrop.frame.size.width);
+    NSLog(@"_imageToCrop.frame.x: %f", _imageToCrop.frame.origin.x);
+    NSLog(@"_imageToCrop.frame.y: %f", _imageToCrop.frame.origin.y);
     
     _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - _imageToCrop.bounds.size.width;
     _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.height;
-    NSLog(@"min x: %f", _minimumImageXOffset);
-    NSLog(@"min y: %f", _minimumImageYOffset);
+    NSLog(@"_minimumImageXOffset: %f", _minimumImageXOffset);
+    NSLog(@"_minimumImageYOffset: %f", _minimumImageYOffset);
 }
 
 #pragma mark - selectors
@@ -184,21 +203,29 @@
         /* make the height 5/4ths the size of the crop view */
         proportion            = image.size.width/image.size.height;
         newHeight             = _cropSize.height * (5.0f/4.0f);
+        NSLog(@"newWidth: %f", newHeight);
+        NSLog(@"size width: %f", image.size.width);
+        NSLog(@"size height: %f", image.size.height);
         newWidth              = newHeight * proportion;
         
     }else{
         /* make the width 5/4ths the size of the crop view */
         proportion             = image.size.height/image.size.width;
         newWidth               = _cropSize.width * (5.0f/4.0f);
+        NSLog(@"newWidth: %f", newWidth);
+        NSLog(@"size width: %f", image.size.width);
         newHeight              = newWidth * proportion;
     }
-    
+    NSLog(@"_cropViewXOffset: %f", _cropViewXOffset);
+    NSLog(@"_cropViewYOffset: %f", _cropViewYOffset);
+    NSLog(@"_cropView.bounds.size.width: %f", _cropView.bounds.size.width);
+    NSLog(@"_cropView.bounds.size.height: %f", _cropView.bounds.size.height);
     CGRect  dynamicImageViewFrame = [[self gestureView] frame];
     dynamicImageViewFrame.size.width  = newWidth;
     dynamicImageViewFrame.size.height = newHeight;
     dynamicImageViewFrame.origin.x    = _cropViewXOffset -  (newWidth - _cropView.bounds.size.width)/2;
     dynamicImageViewFrame.origin.y    = _cropViewYOffset -  (newHeight - _cropView.bounds.size.height)/2;
-    NSLog(@"floats: %f %f %f %f", _cropSize.width, _cropSize.height, _cropViewXOffset, _cropViewYOffset);
+//    NSLog(@"frameForGestureViewWithImage frame: %f %f %f %f", _cropSize.width, _cropSize.height, _cropViewXOffset, _cropViewYOffset);
     return dynamicImageViewFrame;
 }
 
