@@ -90,7 +90,11 @@
     }
     
     if (indexPath.row == 5){
-        MELTextViewTableViewCell *cell = [MELTextViewTableViewCell new];
+        MELExpandingTextCell *cell = [MELExpandingTextCell new];
+        [cell setDelegate:self];
+        [[cell textView] setText:@"lorem ipsum 2"];
+        [[cell placeholder] setText:@"hi mike 2"];
+        [[cell placeholder] setHidden:YES];
         [cell setEditing:YES];
         return cell;
     }
