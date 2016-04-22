@@ -8,8 +8,7 @@
 
 
 /**
- TODO: you have to logout every dimension and figure out what's being screwed up in setImage:
- The radius is the largest the view can get minus it's maximum x/y offset.
+ TODO: The radius is the largest the view can get minus it's maximum x/y offset.
  **/
 
 #import "MELDynamicCropView.h"
@@ -173,17 +172,8 @@
     
     [[self imageToCrop] setImage:_image];
     
-//    NSLog(@"_cropViewXOffset: %f", _cropViewXOffset);
-//    NSLog(@"_cropView.bounds.size.width: %f", _cropView.bounds.size.width);
-//    NSLog(@"_imageToCrop.bounds.size.width: %f", _imageToCrop.bounds.size.width);
-//    NSLog(@"_imageToCrop.frame.size.width: %f", _imageToCrop.frame.size.width);
-//    NSLog(@"_imageToCrop.frame.x: %f", _imageToCrop.frame.origin.x);
-//    NSLog(@"_imageToCrop.frame.y: %f", _imageToCrop.frame.origin.y);
-    
     _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - _imageToCrop.bounds.size.width;
     _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.height;
-    //NSLog(@"_minimumImageXOffset: %f", _minimumImageXOffset);
-    //NSLog(@"_minimumImageYOffset: %f", _minimumImageYOffset);
 }
 
 #pragma mark - selectors
