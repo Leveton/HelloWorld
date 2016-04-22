@@ -92,8 +92,8 @@
     if (indexPath.row == 5){
         MELExpandingTextCell *cell = [MELExpandingTextCell new];
         [cell setDelegate:self];
-        [[cell textView] setText:@"lorem ipsum 5"];
-        [[cell placeholder] setText:@"hi mike 5"];
+        [[cell textView] setText:@"lorem ipsum 7"];
+        [[cell placeholder] setText:@"hi mike 7"];
         [[cell placeholder] setHidden:YES];
         [cell setEditing:YES];
         return cell;
