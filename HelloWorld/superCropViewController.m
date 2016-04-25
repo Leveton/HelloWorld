@@ -22,7 +22,7 @@
 #define kImageRadius                                     (8.0f)
 
 @interface superCropViewController ()<CameraViewControllerDelegate, MELSuperCropDelegate, MELDynamicCropViewDelegate>
-@property (nonatomic, strong) MELSuperCropView     *superCrop;
+@property (nonatomic, strong) MELDynamicCropView     *superCrop;
 @property (nonatomic, strong) UIImage     *image;
 @property (nonatomic, strong) UILabel     *label;
 @property (nonatomic, strong) UIImageView *imageView;
@@ -208,6 +208,16 @@
     
 }
 
+- (MELDynamicCropView *)superCrop{
+    if (!_superCrop){
+        _superCrop = [[MELDynamicCropView alloc]initWithFrame:[[self cropView]frame] cropSize:CGSizeMake(imageWidth, imageWidth) maximumRadius:900.0f];
+        [_superCrop setDelegate:self];
+        //[_superCrop setAllowPinchOutsideOfRadius:YES];
+        //[[self view] addSubview:_superCrop];
+    }
+    return _superCrop;
+}
+
 - (void)CameraViewController:(CameraViewController *)controller didFinishCroppingImage:(UIImage *)image transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect{
     
     __block UIImage *anImage = image;
@@ -218,13 +228,14 @@
         if (anImage){
             //[[self imageView] setImage:anImage];
             _image = anImage;
-            CGRect frame = [[self cropView] frame];
-            frame.size.width = 500.0f;
-            frame.size.height = 500.0f;
-            MELDynamicCropView *crop = [[MELDynamicCropView alloc]initWithFrame:[[self cropView]frame] cropSize:CGSizeMake(imageWidth, imageWidth) maximumRadius:600.0f];
+//            CGRect frame = [[self cropView] frame];
+//            frame.size.width = 500.0f;
+//            frame.size.height = 500.0f;
+            MELDynamicCropView *crop = [[MELDynamicCropView alloc]initWithFrame:[[self cropView]frame] cropSize:CGSizeMake(imageWidth, imageWidth) maximumRadius:900.0f];
             [crop setDelegate:self];
-            [crop setImage:_image];
-            [[self view] addSubview:crop];
+            [[self superCrop] setImage:_image];
+            //[crop setAllowPinchOutsideOfRadius:YES];
+            [[self view] addSubview:[self superCrop]];
             
 //            //[[self imageToCrop] setFrame:[self frameForGestureViewWithImage:image]];
 //            [[self gestureView] setFrame:[self frameForGestureViewWithImage:anImage]];
@@ -284,7 +295,7 @@
 }
 
 - (void)didTapCrop:(id)sender{
-    [[self cropImageView] setImage:self.croppedImage];
+    [[self cropImageView] setImage:self.superCrop.croppedImage];
 }
 
 - (void)didPan:(UIPanGestureRecognizer *)pan{

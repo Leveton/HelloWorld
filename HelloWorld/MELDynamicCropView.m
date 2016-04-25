@@ -27,6 +27,7 @@
 @property (nonatomic, assign) CGFloat     cropViewYOffset;
 @property (nonatomic, assign) CGFloat     minimumImageXOffset;
 @property (nonatomic, assign) CGFloat     minimumImageYOffset;
+@property (nonatomic, assign) CGFloat     maximumPinch;
 @property (nonatomic, assign) CGAffineTransform     originalTransform;
 @end
 
@@ -54,9 +55,12 @@
         newFrame.origin = CGPointMake(frame.origin.x - widthDiff, frame.origin.y - widthDiff);
         [self setFrame:newFrame];
         
-        [self setBackgroundColor:[UIColor redColor]];
+        //[self setBackgroundColor:[UIColor redColor]];
         [self setCropSize:cropSize];
         [self setMaximumRadius:maximumRadius];
+        
+        _maximumPinch = (cropSize.width + newFrame.size.width)/2;
+        NSLog(@"max pinch: %f", _maximumPinch);
     }
     return self;
 }
@@ -176,6 +180,10 @@
     _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.height;
 }
 
+- (void)setAllowPinchOutsideOfRadius:(BOOL)allowPinchOutsideOfRadius{
+    _allowPinchOutsideOfRadius = allowPinchOutsideOfRadius;
+}
+
 #pragma mark - selectors
 
 - (CGRect)frameForGestureViewWithImage:(UIImage *)image{
@@ -228,7 +236,6 @@
         _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - pan.view.frame.size.width;
         _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - pan.view.frame.size.height;
     }
-    
 }
 
 - (void)didPinch:(UIPinchGestureRecognizer *)recognizer{
@@ -240,7 +247,11 @@
         CGFloat gestureWidth  = [recognizer view].frame.size.width;
         CGFloat gestureHeight = [recognizer view].frame.size.height;
         
-        if (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > self.frame.size.width || gestureHeight > self.frame.size.height){
+//        bool disAllowedPinch = _allowPinchOutsideOfRadius ? (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height) : (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > self.frame.size.width || gestureHeight > self.frame.size.height);
+
+        bool disAllowedPinch = _allowPinchOutsideOfRadius ? (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height) : (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > _maximumPinch || gestureHeight > _maximumPinch);
+        
+        if (disAllowedPinch){
             
             [UIView animateWithDuration:0.2f
                                   delay:0.0f

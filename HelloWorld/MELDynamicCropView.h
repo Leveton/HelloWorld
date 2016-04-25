@@ -17,6 +17,7 @@
 @property (nonatomic, assign, readonly) CGRect   cropFrame;
 @property (nonatomic, assign, readonly) CGSize   cropSize;
 @property (nonatomic, assign, readonly) CGFloat  maximumRadius;
+@property (nonatomic, assign, readonly) BOOL     allowPinchOutsideOfRadius;
 
 - (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize maximumRadius:(CGFloat)maximumRadius;
 
@@ -24,6 +25,7 @@
 - (void)setCropSize:(CGSize)cropSize;
 - (void)setMaximumRadius:(CGFloat)maximumRadius;
 - (void)setCropFrame:(CGRect)cropFrame;
+- (void)setAllowPinchOutsideOfRadius:(BOOL)allowPinchOutsideOfRadius;
 
 @end
 
