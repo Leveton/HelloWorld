@@ -105,7 +105,10 @@
 
 - (MELDynamicCropView *)superCrop{
     if (!_superCrop){
-        _superCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(imageWidth, imageWidth) maximumRadius:900.0f];
+        _superCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 320.0f) maximumRadius:900.0f];
+        //[_superCrop setBackgroundColor:[UIColor redColor]];
+        [_superCrop setCropColor:[UIColor greenColor]];
+        [_superCrop setCropAlpha:0.5f];
         [_superCrop setDelegate:self];
         //[_superCrop setAllowPinchOutsideOfRadius:YES];
     }

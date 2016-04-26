@@ -54,7 +54,6 @@
         newFrame.origin = CGPointMake(frame.origin.x - widthDiff, frame.origin.y - widthDiff);
         [self setFrame:newFrame];
         
-        [self setBackgroundColor:[UIColor redColor]];
         [self setCropSize:cropSize];
         [self setMaximumRadius:maximumRadius];
         
@@ -69,8 +68,11 @@
 - (CropView *)cropView{
     if (!_cropView){
         _cropView = [[CropView alloc] initWithFrame:CGRectZero];
+        
+        /* default crop color and opacity */
         [_cropView setBackgroundColor:[UIColor blueColor]];
         [[_cropView layer] setOpacity:0.2f];
+        
         [[_cropView layer] setZPosition:1.0f];
         [self addSubview:_cropView];
         return _cropView;
@@ -81,7 +83,6 @@
 - (UIView *)gestureView{
     if (!_gestureView){
         _gestureView = [[UIView alloc]initWithFrame:CGRectZero];
-        //[_gestureView setBackgroundColor:[UIColor redColor]];
         [_gestureView setUserInteractionEnabled:YES];
         [_gestureView addGestureRecognizer:[self pan]];
         [_gestureView addGestureRecognizer:[self pinch]];
@@ -178,6 +179,16 @@
     _allowPinchOutsideOfRadius = allowPinchOutsideOfRadius;
 }
 
+- (void)setCropAlpha:(CGFloat)cropAlpha{
+    _cropAlpha = cropAlpha;
+    [[[self cropView] layer] setOpacity:_cropAlpha];
+}
+
+- (void)setCropColor:(UIColor *)cropColor{
+    _cropColor = cropColor;
+    [[self cropView] setBackgroundColor:_cropColor];
+}
+
 #pragma mark - selectors
 
 - (CGRect)frameForGestureViewWithImage:(UIImage *)image{
@@ -194,17 +205,36 @@
         newHeight             = _cropSize.height * (5.0f/4.0f);
         newWidth              = newHeight * proportion;
         
+        /* handle edge case where the width we're about to assign is out of bounds */
+        if (!_allowPinchOutsideOfRadius && newWidth > _maximumPinch){
+            newWidth = _maximumPinch;
+            newHeight = newWidth * (image.size.height/image.size.width);
+            NSLog(@"reached width condition: %f %f", newWidth, newHeight);
+        }
+        
+        
     }else{
         /* make the width 5/4ths the size of the crop view */
         proportion             = image.size.height/image.size.width;
         newWidth               = _cropSize.width * (5.0f/4.0f);
         newHeight              = newWidth * proportion;
+        
+        /* handle edge case where the width we're about to assign is out of bounds */
+        if (!_allowPinchOutsideOfRadius && newHeight > _maximumPinch){
+            newHeight = _maximumPinch;
+            newWidth = newHeight * (image.size.width/image.size.height);
+            NSLog(@"reached height condition: %f %f", newWidth, newHeight);
+        }
     }
+    
     CGRect  dynamicImageViewFrame = [[self gestureView] frame];
     dynamicImageViewFrame.size.width  = newWidth;
     dynamicImageViewFrame.size.height = newHeight;
     dynamicImageViewFrame.origin.x    = _cropViewXOffset -  (newWidth - _cropView.bounds.size.width)/2;
     dynamicImageViewFrame.origin.y    = _cropViewYOffset -  (newHeight - _cropView.bounds.size.height)/2;
+    
+    NSLog(@"gesture dims: %f %f", dynamicImageViewFrame.size.width, dynamicImageViewFrame.size.height);
+    
     return dynamicImageViewFrame;
 }
 
@@ -240,12 +270,27 @@
     
     if ([recognizer state] == UIGestureRecognizerStateEnded){
         
+        /* first check if the new x and y offsets are too far below or too far above the cropper, gesture will get stuck if you let this go */
+        
+#warning find the image y offset plus the height of the image and make sure it is greator than the y offset + height of the cropper. you may need to do this for the width as well 
+        CGFloat originX = recognizer.view.frame.origin.x;
+        CGFloat originY = recognizer.view.frame.origin.y;
+        bool outOfBounds = NO;
+        
+        NSLog(@"crop dims: %f %f %f %f %f %f", originX, originY, _cropViewXOffset, _cropViewYOffset, _minimumImageXOffset, _minimumImageYOffset);
+        if (originX < _cropViewXOffset && originY < _cropViewYOffset && originX > _minimumImageXOffset && originY > _minimumImageYOffset){
+            
+        }else{
+            NSLog(@"reached out of bounds");
+            outOfBounds = YES;
+        }
+        
         CGFloat gestureWidth  = [recognizer view].frame.size.width;
         CGFloat gestureHeight = [recognizer view].frame.size.height;
 
         bool disAllowedPinch = _allowPinchOutsideOfRadius ? (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height) : (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > _maximumPinch || gestureHeight > _maximumPinch);
         
-        if (disAllowedPinch){
+        if (outOfBounds || disAllowedPinch){
             
             [UIView animateWithDuration:0.2f
                                   delay:0.0f
@@ -263,7 +308,7 @@
 }
 
 - (UIImage *)croppedImage{
-    return [self rotatedImageWithImage:_image transform:self.imageViewRotation rect:[self currentCropRect]];
+    return [self rotatedImageWithImage:_image transform:[self imageViewRotation] rect:[self currentCropRect]];
 }
 
 - (CGAffineTransform)imageViewRotation{
@@ -281,17 +326,15 @@
 
 - (UIImage *)rotatedImageWithImage:(UIImage *)image transform:(CGAffineTransform)transform rect:(CGRect)rect{
     
-    CGSize size           = image.size;
+    //CGSize size           = image.size;
     
-    UIGraphicsBeginImageContextWithOptions(size,
-                                           YES,
-                                           image.scale);
+    UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
     CGContextRef context  = UIGraphicsGetCurrentContext();
     
-    CGContextTranslateCTM(context, size.width / 2, size.height / 2);
+    CGContextTranslateCTM(context, image.size.width / 2, image.size.height / 2);
     CGContextConcatCTM(context, transform);
-    CGContextTranslateCTM(context, size.width / -2, size.height / -2);
-    [image drawInRect:CGRectMake(0.0f, 0.0f, size.width, size.height)];
+    CGContextTranslateCTM(context, image.size.width / -2, image.size.height / -2);
+    [image drawInRect:CGRectMake(0.0f, 0.0f, image.size.width, image.size.height)];
     
     UIImage *rotatedImage = UIGraphicsGetImageFromCurrentImageContext();
     
