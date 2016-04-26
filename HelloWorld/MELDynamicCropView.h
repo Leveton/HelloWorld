@@ -12,12 +12,12 @@
 
 @interface MELDynamicCropView : UIView
 @property (nonatomic, weak) id <MELDynamicCropViewDelegate> delegate;
-@property (nonatomic, strong, readonly) UIImage  *image;
-@property (nonatomic, strong, readonly) UIImage  *croppedImage;
-@property (nonatomic, assign, readonly) CGRect   cropFrame;
-@property (nonatomic, assign, readonly) CGSize   cropSize;
-@property (nonatomic, assign, readonly) CGFloat  maximumRadius;
-@property (nonatomic, assign, readonly) BOOL     allowPinchOutsideOfRadius;
+@property (nonatomic, strong, readonly) UIImage             *image;
+@property (nonatomic, strong, readonly) UIImage             *croppedImage;
+@property (nonatomic, assign, readonly) CGRect              cropFrame;
+@property (nonatomic, assign, readonly) CGSize              cropSize;
+@property (nonatomic, assign, readonly) CGFloat             maximumRadius;
+@property (nonatomic, assign, readonly) BOOL                allowPinchOutsideOfRadius;
 
 - (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize maximumRadius:(CGFloat)maximumRadius;
 

@@ -6,29 +6,24 @@
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 
-
-/**
- TODO: The radius is the largest the view can get minus it's maximum x/y offset.
- **/
-
 #import "MELDynamicCropView.h"
 #import "CropView.h"
 
 #import <AVFoundation/AVFoundation.h>
 
 @interface MELDynamicCropView()
-@property (nonatomic, strong) UIImageView *imageToCrop;
-@property (nonatomic, strong) UIView      *gestureView;
-@property (nonatomic, strong) CropView    *cropView;
-@property (nonatomic, strong) UIImage     *copiedImage;
-@property (nonatomic, strong) UIPanGestureRecognizer     *pan;
-@property (nonatomic, strong) UIPinchGestureRecognizer     *pinch;
-@property (nonatomic, assign) CGFloat     cropViewXOffset;
-@property (nonatomic, assign) CGFloat     cropViewYOffset;
-@property (nonatomic, assign) CGFloat     minimumImageXOffset;
-@property (nonatomic, assign) CGFloat     minimumImageYOffset;
-@property (nonatomic, assign) CGFloat     maximumPinch;
-@property (nonatomic, assign) CGAffineTransform     originalTransform;
+@property (nonatomic, strong) UIImageView               *imageToCrop;
+@property (nonatomic, strong) UIView                    *gestureView;
+@property (nonatomic, strong) CropView                  *cropView;
+@property (nonatomic, strong) UIImage                   *copiedImage;
+@property (nonatomic, strong) UIPanGestureRecognizer    *pan;
+@property (nonatomic, strong) UIPinchGestureRecognizer  *pinch;
+@property (nonatomic, assign) CGFloat                   cropViewXOffset;
+@property (nonatomic, assign) CGFloat                   cropViewYOffset;
+@property (nonatomic, assign) CGFloat                   minimumImageXOffset;
+@property (nonatomic, assign) CGFloat                   minimumImageYOffset;
+@property (nonatomic, assign) CGFloat                   maximumPinch;
+@property (nonatomic, assign) CGAffineTransform         originalTransform;
 @end
 
 @implementation MELDynamicCropView
@@ -37,25 +32,29 @@
     self = [super initWithFrame:frame];
     if (self){
         
-        CGFloat widthDiff;
-        CGFloat heightDiff;
-        if (maximumRadius < frame.size.width){
-            widthDiff = frame.size.width;
-        }else{
-            widthDiff = (maximumRadius - frame.size.width)/2;
-        }
-        if (maximumRadius < frame.size.height){
-            heightDiff = frame.size.height;
-        }else{
-            heightDiff = (maximumRadius - frame.size.height)/2;
-        }
+#warning if you drag the image to the top edge, and then pinch smaller, it gets stuck
+        /* the view's size must be the size of the radius in order to respond to touch events */
+        CGFloat widthDiff  = (maximumRadius < frame.size.width) ? frame.size.width : (maximumRadius - frame.size.width)/2;
+        //CGFloat heightDiff = (maximumRadius < frame.size.height) ? frame.size.height : (maximumRadius - frame.size.height)/2;
+        
+//        if (maximumRadius < frame.size.width){
+//            widthDiff = frame.size.width;
+//        }else{
+//            widthDiff = (maximumRadius - frame.size.width)/2;
+//        }
+//        
+//        if (maximumRadius < frame.size.height){
+//            heightDiff = frame.size.height;
+//        }else{
+//            heightDiff = (maximumRadius - frame.size.height)/2;
+//        }
         
         CGRect newFrame = frame;
         newFrame.size   = CGSizeMake(maximumRadius, maximumRadius);
         newFrame.origin = CGPointMake(frame.origin.x - widthDiff, frame.origin.y - widthDiff);
         [self setFrame:newFrame];
         
-        //[self setBackgroundColor:[UIColor redColor]];
+        [self setBackgroundColor:[UIColor redColor]];
         [self setCropSize:cropSize];
         [self setMaximumRadius:maximumRadius];
         
@@ -63,11 +62,6 @@
         NSLog(@"max pinch: %f", _maximumPinch);
     }
     return self;
-}
-
-- (void)layoutSubviews{
-    [super layoutSubviews];
-    
 }
 
 #pragma mark - getters
@@ -164,15 +158,15 @@
     imageFrame.size.height  = _gestureView.bounds.size.height;
     [[self imageToCrop] setFrame:imageFrame];
     
-    NSLog(@"_gestureView.bounds.size.width: %f", _gestureView.bounds.size.width);
-    NSLog(@"_gestureView.bounds.size.height: %f", _gestureView.bounds.size.width);
-    NSLog(@"_gestureView.bounds.origin.x: %f", _gestureView.bounds.origin.x);
-    NSLog(@"_gestureView.bounds.origin.y: %f", _gestureView.bounds.origin.y);
-    
-    NSLog(@"_gestureView.frame.size.width: %f", _gestureView.frame.size.width);
-    NSLog(@"_gestureView.frame.size.height: %f", _gestureView.frame.size.height);
-    NSLog(@"_gestureView.frame.origin.x: %f", _gestureView.frame.origin.x);
-    NSLog(@"_gestureView.frame.origin.y: %f", _gestureView.frame.origin.y);
+//    NSLog(@"_gestureView.bounds.size.width: %f", _gestureView.bounds.size.width);
+//    NSLog(@"_gestureView.bounds.size.height: %f", _gestureView.bounds.size.width);
+//    NSLog(@"_gestureView.bounds.origin.x: %f", _gestureView.bounds.origin.x);
+//    NSLog(@"_gestureView.bounds.origin.y: %f", _gestureView.bounds.origin.y);
+//    
+//    NSLog(@"_gestureView.frame.size.width: %f", _gestureView.frame.size.width);
+//    NSLog(@"_gestureView.frame.size.height: %f", _gestureView.frame.size.height);
+//    NSLog(@"_gestureView.frame.origin.x: %f", _gestureView.frame.origin.x);
+//    NSLog(@"_gestureView.frame.origin.y: %f", _gestureView.frame.origin.y);
     
     [[self imageToCrop] setImage:_image];
     
@@ -191,6 +185,8 @@
     CGFloat proportion;
     CGFloat newHeight;
     CGFloat newWidth;
+    
+    NSLog(@"image dims: %f %f", image.size.width, image.size.height);
     
     if (image.size.width >= image.size.height){
         /* make the height 5/4ths the size of the crop view */
@@ -246,8 +242,6 @@
         
         CGFloat gestureWidth  = [recognizer view].frame.size.width;
         CGFloat gestureHeight = [recognizer view].frame.size.height;
-        
-//        bool disAllowedPinch = _allowPinchOutsideOfRadius ? (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height) : (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > self.frame.size.width || gestureHeight > self.frame.size.height);
 
         bool disAllowedPinch = _allowPinchOutsideOfRadius ? (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height) : (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > _maximumPinch || gestureHeight > _maximumPinch);
         

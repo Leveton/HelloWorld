@@ -1,5 +1,5 @@
 //
-//  superCropViewController.h
+//  SuperCropViewController.h
 //  HelloWorld
 //
 //  Created by Mike Leveton on 4/13/16.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface superCropViewController : UIViewController
+@interface SuperCropViewController : UIViewController
 
 @end

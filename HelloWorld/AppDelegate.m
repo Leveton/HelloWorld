@@ -8,11 +8,11 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
-#import "superCropViewController.h"
+#import "SuperCropViewController.h"
 
 @interface AppDelegate ()
 @property (nonatomic, strong) ViewController *viewController;
-@property (nonatomic, strong) superCropViewController *superCropVC;
+@property (nonatomic, strong) SuperCropViewController *superCropVC;
 @end
 
 @implementation AppDelegate
@@ -140,9 +140,9 @@
     return _viewController;
 }
 
-- (superCropViewController *)superCropVC{
+- (SuperCropViewController *)superCropVC{
     if (!_superCropVC){
-        _superCropVC = [[superCropViewController alloc] init];
+        _superCropVC = [[SuperCropViewController alloc] init];
         [[_superCropVC view] setBackgroundColor:[UIColor whiteColor]];
     }
     return _superCropVC;

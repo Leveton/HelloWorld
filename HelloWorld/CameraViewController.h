@@ -51,11 +51,10 @@ typedef enum : NSUInteger {
 @protocol CameraViewControllerDelegate<NSObject>
 
 @required
-- (void)CameraViewController:(CameraViewController *)camera didFinishWithImage:(UIImage *)image;
 - (void)CameraViewController:(CameraViewController *)controller didFinishCroppingImage:(UIImage *)image transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect;
 
 @optional
-
+- (void)CameraViewController:(CameraViewController *)camera didFinishWithImage:(UIImage *)image;
 - (void)cameraDidLoadCameraIntoView:(CameraViewController *)camera;
 
 @end
