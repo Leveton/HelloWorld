@@ -27,7 +27,7 @@
     imageFrame.origin.x = (CGRectGetWidth([[self view]frame]) - imageFrame.size.width)/2;
     imageFrame.origin.y = (CGRectGetHeight([[self view]frame]) - imageFrame.size.height)/2;
     imageFrame.size.width = 320.0f;
-    imageFrame.size.height = 320.0f;
+    imageFrame.size.height = 420.0f;
     [[self imageView] setFrame:imageFrame];
     
     CGRect buttonFrame = [[self button] frame];

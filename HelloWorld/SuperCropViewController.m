@@ -77,6 +77,7 @@
         [[_cropImageView layer] setBorderColor:[UIColor blackColor].CGColor];
         [[_cropImageView layer] setBorderWidth:1.0f];
         [_cropImageView setUserInteractionEnabled:YES];
+        [[_cropImageView layer] setZPosition:4.0f];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapCrop:)];
         [_cropImageView addGestureRecognizer:tap];
         [[self view] addSubview:_cropImageView];
@@ -105,8 +106,8 @@
 
 - (MELDynamicCropView *)superCrop{
     if (!_superCrop){
-        _superCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 320.0f) maximumRadius:900.0f];
-        //[_superCrop setBackgroundColor:[UIColor redColor]];
+        _superCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
+        [_superCrop setBackgroundColor:[UIColor redColor]];
         [_superCrop setCropColor:[UIColor greenColor]];
         [_superCrop setCropAlpha:0.5f];
         [_superCrop setDelegate:self];

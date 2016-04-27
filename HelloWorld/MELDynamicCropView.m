@@ -32,11 +32,10 @@
     self = [super initWithFrame:frame];
     if (self){
         
+        
 #warning if they make the radius smaller than the cropper, use the formula where the image is a 4th as large as the cropper and the radius is a 4th as large as the image.
         
-#warning if you drag the image to the top edge, and then pinch smaller, it gets stuck
         /* the view's size must be the size of the radius in order to respond to touch events */
-        CGFloat widthDiff  = (maximumRadius < frame.size.width) ? frame.size.width : (maximumRadius - frame.size.width)/2;
         //CGFloat heightDiff = (maximumRadius < frame.size.height) ? frame.size.height : (maximumRadius - frame.size.height)/2;
         
 //        if (maximumRadius < frame.size.width){
@@ -50,6 +49,28 @@
 //        }else{
 //            heightDiff = (maximumRadius - frame.size.height)/2;
 //        }
+        
+//        NSLog(@"max radius 0: %f", maximumRadius);
+//        /* make sure user didn't create a smaller max radius than crop size */
+//        if (maximumRadius < cropSize.width || maximumRadius < cropSize.height){
+//            CGFloat proportion;
+//            CGFloat newHeight;
+//            CGFloat newWidth;
+//            
+//            if (cropSize.width > cropSize.height){
+//                proportion           = cropSize.width/cropSize.height;
+//                newHeight            = cropSize.height * (5.0f/4.0f);
+//                maximumRadius        = newHeight * proportion;
+//            }else{
+//                proportion           = cropSize.height/cropSize.width;
+//                newWidth             = cropSize.width * (5.0f/4.0f);
+//                maximumRadius        = newWidth * proportion;
+//            }
+//        }
+//        
+//        NSLog(@"max radius 1: %f", maximumRadius);
+        
+        CGFloat widthDiff  = (maximumRadius < frame.size.width) ? frame.size.width : (maximumRadius - frame.size.width)/2;
         
         CGRect newFrame = frame;
         newFrame.size   = CGSizeMake(maximumRadius, maximumRadius);
@@ -308,9 +329,10 @@
                              completion:^(BOOL finished) {
                                  
                              }];
+        }else{
+            _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width)  - recognizer.view.frame.size.width;
+            _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - recognizer.view.frame.size.height;
         }
-        
-        #warning after pinching, you must recalculate the x and y minimum offsets, otherwise you can pan the image out of bounds
     }
 }
 
