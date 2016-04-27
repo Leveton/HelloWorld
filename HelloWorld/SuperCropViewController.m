@@ -6,7 +6,7 @@
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 
-
+#import "SuperCropModalViewController.h"
 #import "SuperCropViewController.h"
 #import "CameraViewController.h"
 #import "MELDynamicCropView.h"
@@ -141,7 +141,11 @@
 }
 
 - (void)didTapCrop:(id)sender{
-    [[self cropImageView] setImage:[[self superCrop] croppedImage]];
+    //[[self cropImageView] setImage:[[self superCrop] croppedImage]];
+    SuperCropModalViewController *vc = [[SuperCropModalViewController alloc] init];
+    [[vc view] setBackgroundColor:[UIColor whiteColor]];
+    [vc setImage:[[self superCrop] croppedImage]];
+    [self presentViewController:vc animated:YES completion:nil];
 }
 
 @end

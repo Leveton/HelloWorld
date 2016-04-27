@@ -32,6 +32,8 @@
     self = [super initWithFrame:frame];
     if (self){
         
+#warning if they make the radius smaller than the cropper, use the formula where the image is a 4th as large as the cropper and the radius is a 4th as large as the image.
+        
 #warning if you drag the image to the top edge, and then pinch smaller, it gets stuck
         /* the view's size must be the size of the radius in order to respond to touch events */
         CGFloat widthDiff  = (maximumRadius < frame.size.width) ? frame.size.width : (maximumRadius - frame.size.width)/2;
@@ -272,16 +274,19 @@
         
         /* first check if the new x and y offsets are too far below or too far above the cropper, gesture will get stuck if you let this go */
         
-#warning find the image y offset plus the height of the image and make sure it is greator than the y offset + height of the cropper. you may need to do this for the width as well 
+#warning find the image y offset plus the height of the image and make sure it is greator than the y offset + height of the cropper. you may need to do this for the width as well
         CGFloat originX = recognizer.view.frame.origin.x;
         CGFloat originY = recognizer.view.frame.origin.y;
-        bool outOfBounds = NO;
+        CGFloat gestureMaxX    = originX + recognizer.view.frame.size.width;
+        CGFloat gestureMaxY    = originY + recognizer.view.frame.size.height;
+        CGFloat cropperMaxX    = _cropViewXOffset + _cropSize.width;
+        CGFloat cropperMaxY    = _cropViewYOffset + _cropSize.height;
+        bool outOfBounds       = NO;
         
         NSLog(@"crop dims: %f %f %f %f %f %f", originX, originY, _cropViewXOffset, _cropViewYOffset, _minimumImageXOffset, _minimumImageYOffset);
-        if (originX < _cropViewXOffset && originY < _cropViewYOffset && originX > _minimumImageXOffset && originY > _minimumImageYOffset){
-            
-        }else{
-            NSLog(@"reached out of bounds");
+        NSLog(@"max dims: %f %f %f %f", gestureMaxX, gestureMaxY, cropperMaxX, cropperMaxY);
+        
+        if (cropperMaxX > gestureMaxX || cropperMaxY > gestureMaxY || originX > _cropViewXOffset || originY > _cropViewYOffset){
             outOfBounds = YES;
         }
         
@@ -304,6 +309,8 @@
                                  
                              }];
         }
+        
+        #warning after pinching, you must recalculate the x and y minimum offsets, otherwise you can pan the image out of bounds
     }
 }
 

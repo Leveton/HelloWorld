@@ -12,6 +12,7 @@
 		1C3C31681CB8475D0054F82D /* CameraOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C31671CB8475D0054F82D /* CameraOverlayView.m */; };
 		1C3C316B1CB847960054F82D /* PhotoCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C316A1CB847960054F82D /* PhotoCropView.m */; };
 		1C3C316E1CB847EB0054F82D /* UIImage+PhotoCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C316D1CB847EB0054F82D /* UIImage+PhotoCrop.m */; };
+		1C437E251CD068B1002B3A6F /* SuperCropModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C437E241CD068B1002B3A6F /* SuperCropModalViewController.m */; };
 		1C4F150B1CBD41E500DDA173 /* CropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F150A1CBD41E500DDA173 /* CropView.m */; };
 		1CB6BC201C97564600741ED9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC1F1C97564600741ED9 /* main.m */; };
 		1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC221C97564600741ED9 /* AppDelegate.m */; };
@@ -54,6 +55,8 @@
 		1C3C316A1CB847960054F82D /* PhotoCropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoCropView.m; sourceTree = "<group>"; };
 		1C3C316C1CB847EB0054F82D /* UIImage+PhotoCrop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+PhotoCrop.h"; sourceTree = "<group>"; };
 		1C3C316D1CB847EB0054F82D /* UIImage+PhotoCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PhotoCrop.m"; sourceTree = "<group>"; };
+		1C437E231CD068B1002B3A6F /* SuperCropModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperCropModalViewController.h; sourceTree = "<group>"; };
+		1C437E241CD068B1002B3A6F /* SuperCropModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperCropModalViewController.m; sourceTree = "<group>"; };
 		1C4F15091CBD41E500DDA173 /* CropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CropView.h; sourceTree = "<group>"; };
 		1C4F150A1CBD41E500DDA173 /* CropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropView.m; sourceTree = "<group>"; };
 		1CB6BC1B1C97564600741ED9 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +137,8 @@
 				1CB6BC251C97564600741ED9 /* ViewController.m */,
 				1CBBD9241CBF07C600783331 /* SuperCropViewController.h */,
 				1CBBD9251CBF07C600783331 /* SuperCropViewController.m */,
+				1C437E231CD068B1002B3A6F /* SuperCropModalViewController.h */,
+				1C437E241CD068B1002B3A6F /* SuperCropModalViewController.m */,
 				1CBBD9211CBEF2FE00783331 /* MELSuperCropView.h */,
 				1CBBD9221CBEF2FE00783331 /* MELSuperCropView.m */,
 				1CBBD9271CBF3BA900783331 /* MELDynamicCropView.h */,
@@ -315,6 +320,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C437E251CD068B1002B3A6F /* SuperCropModalViewController.m in Sources */,
 				1C3C31651CB8461C0054F82D /* UIImage+Additions.m in Sources */,
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
 				1CBBD9291CBF3BA900783331 /* MELDynamicCropView.m in Sources */,
