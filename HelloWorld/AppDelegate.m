@@ -9,10 +9,12 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 #import "SuperCropViewController.h"
+#import "ScrollViewController.h"
 
 @interface AppDelegate ()
-@property (nonatomic, strong) ViewController *viewController;
+@property (nonatomic, strong) ViewController          *viewController;
 @property (nonatomic, strong) SuperCropViewController *superCropVC;
+@property(nonatomic, strong)  ScrollViewController    *scrollView;
 @end
 
 @implementation AppDelegate
@@ -21,7 +23,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [[self window] setRootViewController:[self superCropVC]];
+    [[self window] setRootViewController:[self scrollView]];
     [[self window] makeKeyAndVisible];
     
     return YES;
@@ -139,6 +141,15 @@
     }
     return _viewController;
 }
+
+- (ScrollViewController *)scrollView{
+    if (!_scrollView){
+        _scrollView = [[ScrollViewController alloc] init];
+        [[_scrollView view] setBackgroundColor:[UIColor whiteColor]];
+    }
+    return _scrollView;
+}
+
 
 - (SuperCropViewController *)superCropVC{
     if (!_superCropVC){

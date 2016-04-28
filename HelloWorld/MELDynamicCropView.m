@@ -28,6 +28,7 @@
 
 @implementation MELDynamicCropView
 
+/* We still need the frame to get the origin */
 - (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize maximumRadius:(CGFloat)maximumRadius{
     self = [super initWithFrame:frame];
     if (self){
