@@ -146,6 +146,7 @@
     SuperCropModalViewController *vc = [[SuperCropModalViewController alloc] init];
     [[vc view] setBackgroundColor:[UIColor whiteColor]];
     [vc setImage:[[self superCrop] croppedImage]];
+    [vc setImageSize:CGSizeMake(320, 420)];
     [self presentViewController:vc animated:YES completion:nil];
 }
 

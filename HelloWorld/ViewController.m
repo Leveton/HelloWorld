@@ -40,12 +40,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //    /*view with gesture CANNOT be in layoutSubviews */
-    //    CGRect gestureFrame = [[self gestureView] frame];
-    //    gestureFrame.size      = CGSizeMake(imageToCropWidth, imageToCropWidth);
-    //    gestureFrame.origin.y  = (CGRectGetHeight([[self view] frame]) - gestureFrame.size.height)/2;
-    //    gestureFrame.origin.x  = (CGRectGetWidth([[self view] frame]) - gestureFrame.size.width)/2;
-    //    [[self gestureView] setFrame:gestureFrame];
 }
 
 - (void)viewWillLayoutSubviews{
@@ -345,6 +339,8 @@
         //NSLog(@"pinch height: %f", [pinch view].frame.size.height);
     }
 }
+
+#pragma mark - image selectors
 
 - (UIImage *)croppedImage{
     //return [_image rotatedImageWithtransform:self.imageViewRotation croppedToRect:[self currentCropRect]];;

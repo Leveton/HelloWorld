@@ -26,9 +26,10 @@
     CGRect imageFrame = [[self imageView] frame];
     imageFrame.origin.x = (CGRectGetWidth([[self view]frame]) - imageFrame.size.width)/2;
     imageFrame.origin.y = (CGRectGetHeight([[self view]frame]) - imageFrame.size.height)/2;
-    imageFrame.size.width = 320.0f;
-    imageFrame.size.height = 420.0f;
+    imageFrame.size = _imageSize;
     [[self imageView] setFrame:imageFrame];
+    
+    NSLog(@"aFloat: %f %f %f %f", imageFrame.origin.x, imageFrame.origin.y, imageFrame.size.width, imageFrame.size.height);
     
     CGRect buttonFrame = [[self button] frame];
     buttonFrame.size.width = 100;
@@ -45,6 +46,10 @@
     _image = image;
     [[self imageView] setImage:_image];
     //[[self imageView] sizeToFit];
+}
+
+- (void)setImageSize:(CGSize)imageSize{
+    _imageSize = imageSize;
 }
 
 - (UIImageView *)imageView{

@@ -10,6 +10,8 @@
 
 @interface SuperCropModalViewController : UIViewController
 @property (nonatomic, strong, readonly) UIImage *image;
+@property (nonatomic, assign, readonly) CGSize imageSize;
 
 - (void)setImage:(UIImage *)image;
+- (void)setImageSize:(CGSize)imageSize;
 @end

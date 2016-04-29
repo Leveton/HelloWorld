@@ -13,8 +13,6 @@
 		1C3C316B1CB847960054F82D /* PhotoCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C316A1CB847960054F82D /* PhotoCropView.m */; };
 		1C3C316E1CB847EB0054F82D /* UIImage+PhotoCrop.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C3C316D1CB847EB0054F82D /* UIImage+PhotoCrop.m */; };
 		1C437E251CD068B1002B3A6F /* SuperCropModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C437E241CD068B1002B3A6F /* SuperCropModalViewController.m */; };
-		1C4E7F441CD1BB1300175FC8 /* ZoomingImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4E7F431CD1BB1300175FC8 /* ZoomingImageScrollView.m */; };
-		1C4E7F471CD1BD9200175FC8 /* ScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4E7F461CD1BD9200175FC8 /* ScrollViewController.m */; };
 		1C4F150B1CBD41E500DDA173 /* CropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F150A1CBD41E500DDA173 /* CropView.m */; };
 		1CB6BC201C97564600741ED9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC1F1C97564600741ED9 /* main.m */; };
 		1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC221C97564600741ED9 /* AppDelegate.m */; };
@@ -59,10 +57,6 @@
 		1C3C316D1CB847EB0054F82D /* UIImage+PhotoCrop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PhotoCrop.m"; sourceTree = "<group>"; };
 		1C437E231CD068B1002B3A6F /* SuperCropModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperCropModalViewController.h; sourceTree = "<group>"; };
 		1C437E241CD068B1002B3A6F /* SuperCropModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperCropModalViewController.m; sourceTree = "<group>"; };
-		1C4E7F421CD1BB1300175FC8 /* ZoomingImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomingImageScrollView.h; sourceTree = "<group>"; };
-		1C4E7F431CD1BB1300175FC8 /* ZoomingImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomingImageScrollView.m; sourceTree = "<group>"; };
-		1C4E7F451CD1BD9200175FC8 /* ScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollViewController.h; sourceTree = "<group>"; };
-		1C4E7F461CD1BD9200175FC8 /* ScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollViewController.m; sourceTree = "<group>"; };
 		1C4F15091CBD41E500DDA173 /* CropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CropView.h; sourceTree = "<group>"; };
 		1C4F150A1CBD41E500DDA173 /* CropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CropView.m; sourceTree = "<group>"; };
 		1CB6BC1B1C97564600741ED9 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -153,10 +147,6 @@
 				1C4F150A1CBD41E500DDA173 /* CropView.m */,
 				1C3C31601CB845B10054F82D /* CameraViewController.h */,
 				1C3C31611CB845B10054F82D /* CameraViewController.m */,
-				1C4E7F421CD1BB1300175FC8 /* ZoomingImageScrollView.h */,
-				1C4E7F431CD1BB1300175FC8 /* ZoomingImageScrollView.m */,
-				1C4E7F451CD1BD9200175FC8 /* ScrollViewController.h */,
-				1C4E7F461CD1BD9200175FC8 /* ScrollViewController.m */,
 				1C3C31631CB8461C0054F82D /* UIImage+Additions.h */,
 				1C3C31641CB8461C0054F82D /* UIImage+Additions.m */,
 				1C3C31661CB8475D0054F82D /* CameraOverlayView.h */,
@@ -342,10 +332,8 @@
 				1C3C316B1CB847960054F82D /* PhotoCropView.m in Sources */,
 				1C3C31681CB8475D0054F82D /* CameraOverlayView.m in Sources */,
 				1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */,
-				1C4E7F441CD1BB1300175FC8 /* ZoomingImageScrollView.m in Sources */,
 				1CB6BC201C97564600741ED9 /* main.m in Sources */,
 				1CB6BC2C1C97564600741ED9 /* HelloWorld.xcdatamodeld in Sources */,
-				1C4E7F471CD1BD9200175FC8 /* ScrollViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
