@@ -117,7 +117,7 @@
         [_gestureView addGestureRecognizer:[self pan]];
         [_gestureView addGestureRecognizer:[self pinch]];
         if (!_useScrollView){
-          [self addSubview:_gestureView];
+            [self addSubview:_gestureView];
         }
         return _gestureView;
     }
@@ -159,9 +159,6 @@
     }
     return _pinch;
 }
-
-
-
 
 
 - (UIScrollView *)scrollView{
@@ -399,26 +396,31 @@
 
 - (CGAffineTransform)imageViewRotation{
     if (_useScrollView){
-        return _scrollImageToCrop.transform;
+        NSLog(@"transforms: %f %f %f %f", _scrollImageToCrop.transform.a, _scrollImageToCrop.transform.b, _scrollImageToCrop.transform.c, _scrollImageToCrop.transform.d);
+        CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, 1, 0, 0);
+        return transform;
+        //return _scrollImageToCrop.transform;
     }else{
-        return _imageToCrop.transform;
+        NSLog(@"transforms: %f %f %f %f %f %f", _imageToCrop.transform.a, _imageToCrop.transform.b, _imageToCrop.transform.c, _imageToCrop.transform.d, _imageToCrop.transform.tx, _imageToCrop.transform.ty);
+        NSLog(@"transforms: %f %f %f %f %f %f", _gestureView.transform.a, _gestureView.transform.b, _gestureView.transform.c, _gestureView.transform.d, _gestureView.transform.tx, _gestureView.transform.ty);
+        //return _imageToCrop.transform;
+        CGAffineTransform transform = CGAffineTransformMake(1, 0, 0, 1, 0, 0);
+        return transform;
     }
 }
 
 - (CGRect)currentCropRect{
     if (_useScrollView){
         CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_scrollImageToCrop];
-        CGSize size     = _scrollImageToCrop.image.size;
         CGFloat ratio   = 1.0f;
-        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_scrollImageToCrop.image.size, _scrollView.bounds)) / size.width;
+        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_scrollImageToCrop.image.size, _scrollView.bounds)) / _scrollImageToCrop.image.size.width;
         CGRect rect     = CGRectMake(cropRect.origin.x / ratio,cropRect.origin.y / ratio,cropRect.size.width / ratio,cropRect.size.height / ratio);
         return rect;
     }else{
         CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_gestureView];
-        CGSize size     = _image.size;
         CGFloat ratio   = 1.0f;
-        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _gestureView.bounds)) / size.width;
-        CGRect rect     = CGRectMake(cropRect.origin.x / ratio,cropRect.origin.y / ratio,cropRect.size.width / ratio,cropRect.size.height / ratio);
+        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _gestureView.bounds)) / _image.size.width;
+        CGRect rect     = CGRectMake(cropRect.origin.x / ratio, cropRect.origin.y / ratio,cropRect.size.width / ratio, cropRect.size.height / ratio);
         return rect;
     }
 }

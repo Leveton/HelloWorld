@@ -1,5 +1,5 @@
 //
-//  MELSuperCropView.h
+//  MELDynamicCropView.h
 //  HelloWorld
 //
 //  Created by Mike Leveton on 4/13/16.
@@ -8,22 +8,31 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol MELSuperCropDelegate;
+@protocol MELSuperCropViewDelegate;
 
 @interface MELSuperCropView : UIView
-@property (nonatomic, weak) id <MELSuperCropDelegate> delegate;
-@property (nonatomic, strong, readonly) UIImage *image;
-@property (nonatomic, strong, readonly) UIImage *croppedImage;
-@property (nonatomic, assign, readonly) CGRect  cropFrame;
-@property (nonatomic, assign, readonly) CGSize  cropSize;
+@property (nonatomic, weak) id <MELSuperCropViewDelegate> delegate;
+@property (nonatomic, strong, readonly) UIImage             *image;
+@property (nonatomic, strong, readonly) UIImage             *croppedImage;
+@property (nonatomic, strong, readonly) UIColor             *cropColor;
+@property (nonatomic, assign, readonly) CGRect              cropFrame;
+@property (nonatomic, assign, readonly) CGSize              cropSize;
+@property (nonatomic, assign, readonly) CGFloat             cropAlpha;
+@property (nonatomic, assign, readonly) CGFloat             maximumRadius;
+@property (nonatomic, assign, readonly) BOOL                allowPinchOutsideOfRadius;
 
-- (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize;
+- (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize maximumRadius:(CGFloat)maximumRadius;
 
 - (void)setImage:(UIImage *)image;
+- (void)setCropColor:(UIColor *)cropColor;
 - (void)setCropSize:(CGSize)cropSize;
+- (void)setCropAlpha:(CGFloat)cropAlpha;
+- (void)setMaximumRadius:(CGFloat)maximumRadius;
 - (void)setCropFrame:(CGRect)cropFrame;
+- (void)setAllowPinchOutsideOfRadius:(BOOL)allowPinchOutsideOfRadius;
+
 @end
 
-@protocol MELSuperCropDelegate <NSObject>
+@protocol MELSuperCropViewDelegate <NSObject>
 
 @end

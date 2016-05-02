@@ -10,11 +10,13 @@
 #import "SuperCropViewController.h"
 #import "CameraViewController.h"
 #import "MELDynamicCropView.h"
+#import "MELSuperCropView.h"
 
 #define imageWidth                                       (320.0f)
 
-@interface SuperCropViewController ()<CameraViewControllerDelegate, MELDynamicCropViewDelegate>
-@property (nonatomic, strong) MELDynamicCropView     *superCrop;
+@interface SuperCropViewController ()<CameraViewControllerDelegate, MELDynamicCropViewDelegate, MELSuperCropViewDelegate>
+@property (nonatomic, strong) MELDynamicCropView     *dynamicCrop;
+@property (nonatomic, strong) MELSuperCropView       *superCrop;
 @property (nonatomic, strong) UIImage                *image;
 @property (nonatomic, strong) UILabel                *label;
 @property (nonatomic, strong) UIImageView            *cropImageView;
@@ -104,14 +106,26 @@
     }];
 }
 
-- (MELDynamicCropView *)superCrop{
+- (MELDynamicCropView *)dynamicCrop{
+    if (!_dynamicCrop){
+        _dynamicCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
+        [_dynamicCrop setBackgroundColor:[UIColor redColor]];
+        [_dynamicCrop setCropColor:[UIColor greenColor]];
+        [_dynamicCrop setCropAlpha:0.5f];
+        [_dynamicCrop setDelegate:self];
+        [_dynamicCrop setAllowPinchOutsideOfRadius:YES];
+    }
+    return _dynamicCrop;
+}
+
+- (MELSuperCropView *)superCrop{
     if (!_superCrop){
-        _superCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
+        _superCrop = [[MELSuperCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
         [_superCrop setBackgroundColor:[UIColor redColor]];
         [_superCrop setCropColor:[UIColor greenColor]];
         [_superCrop setCropAlpha:0.5f];
         [_superCrop setDelegate:self];
-        //[_superCrop setAllowPinchOutsideOfRadius:YES];
+        [_superCrop setAllowPinchOutsideOfRadius:YES];
     }
     return _superCrop;
 }
@@ -124,8 +138,9 @@
         
         if (anImage){
             _image = anImage;
+            //[[self dynamicCrop] setImage:_image];
+            //[[self view] addSubview:[self dynamicCrop]];
             [[self superCrop] setImage:_image];
-            //[crop setAllowPinchOutsideOfRadius:YES];
             [[self view] addSubview:[self superCrop]];
             
         }else{
