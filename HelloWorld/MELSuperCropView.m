@@ -37,7 +37,7 @@
     self = [super initWithFrame:frame];
     if (self){
         
-       // _useScrollView = YES;
+    _useScrollView = YES;
         
 #warning if they make the radius smaller than the cropper, use the formula where the image is a 4th as large as the cropper and the radius is a 4th as large as the image.
         
@@ -157,6 +157,15 @@
         [_scrollView setScrollEnabled:YES];
         [_scrollView setMinimumZoomScale:1.0f];
         [_scrollView setMaximumZoomScale:5.0f];
+        NSLog(@"clips?: %ld", (long)_scrollView.clipsToBounds);
+        
+        _scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
+        _scrollView.showsHorizontalScrollIndicator = NO;
+        _scrollView.showsVerticalScrollIndicator = NO;
+        _scrollView.bounces = NO;
+        //_scrollView.bouncesZoom = NO;
+        _scrollView.clipsToBounds = NO;
+        
         [self addSubview:_scrollView];
         return _scrollView;
     }
@@ -295,6 +304,7 @@
         CGFloat originX = pan.view.frame.origin.x;
         CGFloat originY = pan.view.frame.origin.y;
         
+#warning change this to only check for out of bounds in ended, if its out of bounds, it snaps back to it's closest corner, don't worry about bounds as this isn't pinch
         
         if (originX < _cropViewXOffset && originY < _cropViewYOffset && originX > _minimumImageXOffset && originY > _minimumImageYOffset){
             [pan setTranslation:CGPointMake(0, 0) inView:pan.view.superview];
@@ -364,7 +374,7 @@
 - (UIImage *)croppedImage{
     
     if (_useScrollView){
-        return [self croppedImageWithImage:_scrollImageToCrop.image rect:[self currentCropRect]];
+        return [self croppedImageWithImage:_copiedImage rect:[self currentCropRect]];
     }else{
         return [self croppedImageWithImage:_image rect:[self currentCropRect]];
     }
@@ -373,12 +383,11 @@
 - (CGRect)currentCropRect{
     if (_useScrollView){
         CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_scrollImageToCrop];
-        CGSize size     = _scrollImageToCrop.image.size;
         CGFloat ratio   = 1.0f;
         
 #warning I think this needs to be the original image chosen from the user
 #warning I think you should use this method instead of the arbitrary 5/4 ratio above
-        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_scrollImageToCrop.image.size, _scrollView.bounds)) / size.width;
+        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_copiedImage.size, _scrollImageToCrop.bounds)) / _image.size.width;
         CGRect rect     = CGRectMake(cropRect.origin.x / ratio,cropRect.origin.y / ratio,cropRect.size.width / ratio,cropRect.size.height / ratio);
         return rect;
     }else{
@@ -409,7 +418,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-    return self.scrollImageToCrop;
+    return _scrollImageToCrop;
 }
 
 @end
