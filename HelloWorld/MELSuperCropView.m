@@ -8,6 +8,7 @@
 
 #import "MELSuperCropView.h"
 #import "CropView.h"
+#import "ZoomingImageScrollView.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -26,7 +27,7 @@
 
 
 @property (nonatomic, assign) BOOL                      useScrollView;
-@property (nonatomic, strong) UIScrollView              *scrollView;
+@property (nonatomic, strong) ZoomingImageScrollView              *scrollView;
 @property (nonatomic, strong) UIImageView               *scrollImageToCrop;
 @end
 
@@ -38,6 +39,8 @@
     if (self){
         
     _useScrollView = YES;
+        NSLog(@"self clips: %ld", (long)self.clipsToBounds);
+        [self setClipsToBounds:YES];
         
 #warning if they make the radius smaller than the cropper, use the formula where the image is a 4th as large as the cropper and the radius is a 4th as large as the image.
         
@@ -150,13 +153,13 @@
 }
 
 
-- (UIScrollView *)scrollView{
+- (ZoomingImageScrollView *)scrollView{
     if (!_scrollView){
-        _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
-        [_scrollView setDelegate:self];
+        _scrollView = [[ZoomingImageScrollView alloc] initWithFrame:CGRectZero];
+        //[_scrollView setDelegate:self];
         [_scrollView setScrollEnabled:YES];
-        [_scrollView setMinimumZoomScale:1.0f];
-        [_scrollView setMaximumZoomScale:5.0f];
+        //[_scrollView setMinimumZoomScale:1.0f];
+        //[_scrollView setMaximumZoomScale:5.0f];
         NSLog(@"clips?: %ld", (long)_scrollView.clipsToBounds);
         
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -211,17 +214,22 @@
     
     if (_useScrollView){
         CGRect scrollFrame = [[self scrollView]frame];
-        scrollFrame.size.width = CGRectGetWidth([self frame]);
-        scrollFrame.size.height = CGRectGetHeight([self frame]);
+        scrollFrame.size.height = _cropView.frame.size.height + 20.0f;
+        CGFloat ratio           = _image.size.width/_image.size.height;
+        scrollFrame.size.width  = scrollFrame.size.height * ratio;
+        scrollFrame.origin.y    = _cropView.frame.origin.y - 10.0f;
+        NSLog(@"width of scroll: %f", scrollFrame.size.width);
         [[self scrollView] setFrame:scrollFrame];
         
         CGRect scrollImageFrame = [[self scrollImageToCrop] frame];
-        scrollImageFrame.size.width = CGRectGetWidth([self frame]);
-        scrollImageFrame.size.height = [[self cropView]frame].size.height;
-        scrollImageFrame.origin.y   = [[self cropView]frame].origin.y;
+        scrollImageFrame.size   = scrollFrame.size;
+        scrollImageFrame.origin.x   = 0.0f;
+        scrollImageFrame.origin.y   = 0.0f;
         [[self scrollImageToCrop] setFrame:scrollImageFrame];
         
         [[self scrollView] setContentSize:CGSizeMake(scrollFrame.size.width + 200, 0)];
+        [[self scrollView] setOriginalWidth:scrollFrame.size.width];
+        [[self scrollView] setOriginalContentWidth:scrollFrame.size.width + 200];
     }
     
     [[self imageToCrop] setImage:_image];
@@ -383,20 +391,24 @@
 - (CGRect)currentCropRect{
     if (_useScrollView){
         CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_scrollImageToCrop];
+        NSLog(@"crop size: %f %f", cropRect.size.width, cropRect.size.height);
         CGFloat ratio   = 1.0f;
         
 #warning I think this needs to be the original image chosen from the user
 #warning I think you should use this method instead of the arbitrary 5/4 ratio above
         ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_copiedImage.size, _scrollImageToCrop.bounds)) / _image.size.width;
+        NSLog(@"ratio: %f", ratio);
         CGRect rect     = CGRectMake(cropRect.origin.x / ratio,cropRect.origin.y / ratio,cropRect.size.width / ratio,cropRect.size.height / ratio);
         return rect;
     }else{
         /* this takes _cropView and puts it in _imageToCrop's coordinate space without moving it */
         CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_imageToCrop];
+        NSLog(@"crop size: %f %f", cropRect.size.width, cropRect.size.height);
         CGFloat ratio   = 1.0f;
         
         /*changes the rect you give it to another rect with the aspect ratio that you want */
         ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _imageToCrop.bounds)) / _image.size.width;
+        NSLog(@"ratio: %f", ratio);
         CGRect rect     = CGRectMake(cropRect.origin.x/ratio, cropRect.origin.y/ratio, cropRect.size.width/ratio, cropRect.size.height/ratio);
         return rect;
     }

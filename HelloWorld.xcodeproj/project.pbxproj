@@ -25,6 +25,7 @@
 		1CBBD9231CBEF2FE00783331 /* MELSuperCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBD9221CBEF2FE00783331 /* MELSuperCropView.m */; };
 		1CBBD9261CBF07C600783331 /* SuperCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBD9251CBF07C600783331 /* SuperCropViewController.m */; };
 		1CBBD9291CBF3BA900783331 /* MELDynamicCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBD9281CBF3BA900783331 /* MELDynamicCropView.m */; };
+		1CE909521CD94C180036AA12 /* ZoomingImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE909511CD94C180036AA12 /* ZoomingImageScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 		1CBBD9251CBF07C600783331 /* SuperCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperCropViewController.m; sourceTree = "<group>"; };
 		1CBBD9271CBF3BA900783331 /* MELDynamicCropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MELDynamicCropView.h; sourceTree = "<group>"; };
 		1CBBD9281CBF3BA900783331 /* MELDynamicCropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MELDynamicCropView.m; sourceTree = "<group>"; };
+		1CE909501CD94C180036AA12 /* ZoomingImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomingImageScrollView.h; sourceTree = "<group>"; };
+		1CE909511CD94C180036AA12 /* ZoomingImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomingImageScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +150,8 @@
 				1C4F150A1CBD41E500DDA173 /* CropView.m */,
 				1C3C31601CB845B10054F82D /* CameraViewController.h */,
 				1C3C31611CB845B10054F82D /* CameraViewController.m */,
+				1CE909501CD94C180036AA12 /* ZoomingImageScrollView.h */,
+				1CE909511CD94C180036AA12 /* ZoomingImageScrollView.m */,
 				1C3C31631CB8461C0054F82D /* UIImage+Additions.h */,
 				1C3C31641CB8461C0054F82D /* UIImage+Additions.m */,
 				1C3C31661CB8475D0054F82D /* CameraOverlayView.h */,
@@ -323,6 +328,7 @@
 				1C437E251CD068B1002B3A6F /* SuperCropModalViewController.m in Sources */,
 				1C3C31651CB8461C0054F82D /* UIImage+Additions.m in Sources */,
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
+				1CE909521CD94C180036AA12 /* ZoomingImageScrollView.m in Sources */,
 				1CBBD9291CBF3BA900783331 /* MELDynamicCropView.m in Sources */,
 				1C3C316E1CB847EB0054F82D /* UIImage+PhotoCrop.m in Sources */,
 				1C3C31621CB845B10054F82D /* CameraViewController.m in Sources */,
