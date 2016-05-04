@@ -160,6 +160,7 @@
         [_scrollView setScrollEnabled:YES];
         //[_scrollView setMinimumZoomScale:1.0f];
         //[_scrollView setMaximumZoomScale:5.0f];
+        [_scrollView setBackgroundColor:[UIColor blueColor]];
         NSLog(@"clips?: %ld", (long)_scrollView.clipsToBounds);
         
         _scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -214,20 +215,27 @@
     
     if (_useScrollView){
         CGRect scrollFrame = [[self scrollView]frame];
-        scrollFrame.size.height = _cropView.frame.size.height + 20.0f;
+        scrollFrame.size.height = _cropView.frame.size.height;
         CGFloat ratio           = _image.size.width/_image.size.height;
-        scrollFrame.size.width  = scrollFrame.size.height * ratio;
-        scrollFrame.origin.y    = _cropView.frame.origin.y - 10.0f;
-        NSLog(@"width of scroll: %f", scrollFrame.size.width);
+        CGFloat contentWidth    = scrollFrame.size.height * ratio;
+        scrollFrame.size.width  = self.frame.size.width;
+        scrollFrame.origin.y    = _cropView.frame.origin.y;
         [[self scrollView] setFrame:scrollFrame];
+        [[self scrollView] setContentSize:CGSizeMake(contentWidth+(_cropView.frame.origin.x*2), scrollFrame.size.height)];
         
         CGRect scrollImageFrame = [[self scrollImageToCrop] frame];
-        scrollImageFrame.size   = scrollFrame.size;
-        scrollImageFrame.origin.x   = 0.0f;
+        scrollImageFrame.size.width   = contentWidth;
+        scrollImageFrame.size.height  = scrollFrame.size.height;
+        scrollImageFrame.origin.x   = -((scrollFrame.size.width - contentWidth)/2)+40;
         scrollImageFrame.origin.y   = 0.0f;
         [[self scrollImageToCrop] setFrame:scrollImageFrame];
         
-        [[self scrollView] setContentSize:CGSizeMake(scrollFrame.size.width + 200, 0)];
+        NSLog(@"width of scrollView: %f", scrollFrame.size.width);
+        NSLog(@"width of scrollimage: %f", scrollImageFrame.size.width);
+        NSLog(@"width of contentsize: %f", contentWidth+(_cropView.frame.origin.x*2));
+        NSLog(@"width of cropwidth: %f", _cropView.frame.size.width);
+        
+        //[[self scrollView] setContentOffset:CGPointMake(self.frame.size.width/2, 0.0f)];
         [[self scrollView] setOriginalWidth:scrollFrame.size.width];
         [[self scrollView] setOriginalContentWidth:scrollFrame.size.width + 200];
     }
