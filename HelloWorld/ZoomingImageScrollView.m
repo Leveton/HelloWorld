@@ -95,13 +95,7 @@
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView{
-//    if (scrollView.zoomScale < 0.80f && [[self zoomViewDelegate] respondsToSelector:@selector(imageWasPinchedWithScollView:)]){
-//        [[self zoomViewDelegate] imageWasPinchedWithScollView:self];
-//    }
-    
-    if (scrollView.zoomScale < 0.80f && [[self zoomViewDelegate] respondsToSelector:@selector(imageWasPinchedWithFrame:fromZoomingView:)]){
-        [[self zoomViewDelegate] imageWasPinchedWithFrame:[[self imageZoomView]frame] fromZoomingView:self];
-    }
+
 }
 
 #pragma mark - Private methods

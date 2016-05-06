@@ -142,6 +142,7 @@
             //[[self view] addSubview:[self dynamicCrop]];
             [[self superCrop] setImage:_image];
             [[self view] addSubview:[self superCrop]];
+            NSLog(@"total view width: %f", self.view.frame.size.width);
             
         }else{
             NSLog(@"reached no animage");

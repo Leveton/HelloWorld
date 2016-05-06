@@ -6,13 +6,13 @@
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 
-#import "MELSuperCropView.h"
+#import "MELPortableCropView.h"
 #import "CropView.h"
 #import "ZoomingImageScrollView.h"
 
 #import <AVFoundation/AVFoundation.h>
 
-@interface MELSuperCropView()<UIScrollViewDelegate>
+@interface MELPortableCropView()<UIScrollViewDelegate>
 @property (nonatomic, strong) UIImageView               *imageToCrop;
 @property (nonatomic, strong) CropView                  *cropView;
 @property (nonatomic, strong) UIImage                   *copiedImage;
@@ -25,59 +25,20 @@
 @property (nonatomic, assign) CGFloat                   maximumPinch;
 @property (nonatomic, assign) CGAffineTransform         originalTransform;
 
-
-@property (nonatomic, assign) BOOL                      useScrollView;
-@property (nonatomic, strong) ZoomingImageScrollView              *scrollView;
-@property (nonatomic, strong) UIImageView               *scrollImageToCrop;
 @end
 
-@implementation MELSuperCropView
+@implementation MELPortableCropView
 
-/* We still need the frame to get the origin */
+#warning if they set a cropper with a bigger length than height but the image has a bigger height than length, you set the radius to have the same aspect ratio as the image.
+
 - (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize maximumRadius:(CGFloat)maximumRadius{
     self = [super initWithFrame:frame];
     if (self){
         
-    _useScrollView = YES;
         NSLog(@"self clips: %ld", (long)self.clipsToBounds);
         [self setClipsToBounds:YES];
         
 #warning if they make the radius smaller than the cropper, use the formula where the image is a 4th as large as the cropper and the radius is a 4th as large as the image.
-        
-        /* the view's size must be the size of the radius in order to respond to touch events */
-        //CGFloat heightDiff = (maximumRadius < frame.size.height) ? frame.size.height : (maximumRadius - frame.size.height)/2;
-        
-        //        if (maximumRadius < frame.size.width){
-        //            widthDiff = frame.size.width;
-        //        }else{
-        //            widthDiff = (maximumRadius - frame.size.width)/2;
-        //        }
-        //
-        //        if (maximumRadius < frame.size.height){
-        //            heightDiff = frame.size.height;
-        //        }else{
-        //            heightDiff = (maximumRadius - frame.size.height)/2;
-        //        }
-        
-        //        NSLog(@"max radius 0: %f", maximumRadius);
-        //        /* make sure user didn't create a smaller max radius than crop size */
-        //        if (maximumRadius < cropSize.width || maximumRadius < cropSize.height){
-        //            CGFloat proportion;
-        //            CGFloat newHeight;
-        //            CGFloat newWidth;
-        //
-        //            if (cropSize.width > cropSize.height){
-        //                proportion           = cropSize.width/cropSize.height;
-        //                newHeight            = cropSize.height * (5.0f/4.0f);
-        //                maximumRadius        = newHeight * proportion;
-        //            }else{
-        //                proportion           = cropSize.height/cropSize.width;
-        //                newWidth             = cropSize.width * (5.0f/4.0f);
-        //                maximumRadius        = newWidth * proportion;
-        //            }
-        //        }
-        //
-        //        NSLog(@"max radius 1: %f", maximumRadius);
         
         CGFloat widthDiff  = (maximumRadius < frame.size.width) ? frame.size.width : (maximumRadius - frame.size.width)/2;
         
@@ -115,16 +76,11 @@
 - (UIImageView *)imageToCrop{
     if (!_imageToCrop){
         _imageToCrop = [[UIImageView alloc]initWithFrame:CGRectZero];
-        //[_imageToCrop.layer setZPosition:3.0f];
         [_imageToCrop setUserInteractionEnabled:YES];
         [_imageToCrop addGestureRecognizer:[self pan]];
         [_imageToCrop addGestureRecognizer:[self pinch]];
         [_imageToCrop setBackgroundColor:[UIColor clearColor]];
-        //[_imageToCrop setContentMode:UIViewContentModeScaleAspectFit];
-        //[_imageToCrop setClipsToBounds:YES];
-        if (!_useScrollView){
-            [self addSubview:_imageToCrop];
-        }
+        [self addSubview:_imageToCrop];
         return _imageToCrop;
     }
     return _imageToCrop;
@@ -150,40 +106,6 @@
         _pinch = [[UIPinchGestureRecognizer alloc]initWithTarget:self action:@selector(didPinch:)];
     }
     return _pinch;
-}
-
-
-- (ZoomingImageScrollView *)scrollView{
-    if (!_scrollView){
-        _scrollView = [[ZoomingImageScrollView alloc] initWithFrame:CGRectZero];
-        //[_scrollView setDelegate:self];
-        [_scrollView setScrollEnabled:YES];
-        //[_scrollView setMinimumZoomScale:1.0f];
-        //[_scrollView setMaximumZoomScale:5.0f];
-        [_scrollView setBackgroundColor:[UIColor blueColor]];
-        NSLog(@"clips?: %ld", (long)_scrollView.clipsToBounds);
-        
-        _scrollView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin;
-        _scrollView.showsHorizontalScrollIndicator = NO;
-        _scrollView.showsVerticalScrollIndicator = NO;
-        _scrollView.bounces = NO;
-        //_scrollView.bouncesZoom = NO;
-        _scrollView.clipsToBounds = NO;
-        
-        [self addSubview:_scrollView];
-        return _scrollView;
-    }
-    return _scrollView;
-}
-
-- (UIImageView *)scrollImageToCrop{
-    if (!_scrollImageToCrop){
-        _scrollImageToCrop = [[UIImageView alloc] initWithFrame:CGRectZero];
-        [_scrollImageToCrop setImage:[UIImage imageNamed:@"pan"]];
-        [[self scrollView] addSubview:_scrollImageToCrop];
-        return _scrollImageToCrop;
-    }
-    return _scrollImageToCrop;
 }
 
 #pragma mark - setters
@@ -212,71 +134,10 @@
     
     _originalTransform = _imageToCrop.transform;
     
-    
-    if (_useScrollView){
-//        CGRect scrollFrame = [[self scrollView]frame];
-//        scrollFrame.size.height = _cropView.frame.size.height;
-//        CGFloat ratio           = _image.size.width/_image.size.height;
-//        NSLog(@"ratio: %f", ratio);
-//        CGFloat contentWidth    = scrollFrame.size.height * ratio;
-//        scrollFrame.size.width  = self.frame.size.width;
-//        scrollFrame.origin.y    = _cropView.frame.origin.y;
-//        [[self scrollView] setFrame:scrollFrame];
-//        [[self scrollView] setContentSize:CGSizeMake(contentWidth+(_cropView.frame.origin.x*2), scrollFrame.size.height)];
-//        
-//        CGFloat width = _scrollView.contentSize.width;
-//        CGFloat scrollimageX = (width - contentWidth)/2;
-//        NSLog(@"SCROLL X: %f", scrollimageX);
-//        
-//        CGRect scrollImageFrame = [[self scrollImageToCrop] frame];
-//        scrollImageFrame.size.width   = contentWidth;
-//        scrollImageFrame.size.height  = scrollFrame.size.height;
-//        scrollImageFrame.origin.x   = -((scrollFrame.size.width - contentWidth)/2)+87;
-//        //scrollImageFrame.origin.x   = -scrollimageX;
-//        scrollImageFrame.origin.y   = 0.0f;
-//        [[self scrollImageToCrop] setFrame:scrollImageFrame];
-        
-        
-        CGRect scrollFrame = [[self scrollView]frame];
-        scrollFrame.size.height = _cropView.frame.size.height;
-        CGFloat contentWidth    = 900;
-        scrollFrame.size.width  = self.frame.size.width;
-        scrollFrame.origin.y    = _cropView.frame.origin.y;
-        [[self scrollView] setFrame:scrollFrame];
-        [[self scrollView] setContentSize:CGSizeMake(1480, scrollFrame.size.height)];
-        
-        CGFloat width = _scrollView.contentSize.width;
-        CGFloat scrollimageX = (width - contentWidth)/2;
-        NSLog(@"SCROLL X: %f", scrollimageX);
-        
-        CGRect scrollImageFrame = [[self scrollImageToCrop] frame];
-        scrollImageFrame.size.width   = contentWidth;
-        scrollImageFrame.size.height  = scrollFrame.size.height;
-        scrollImageFrame.origin.x   = 0;
-        //scrollImageFrame.origin.x   = -scrollimageX;
-        scrollImageFrame.origin.y   = 0.0f;
-        [[self scrollImageToCrop] setFrame:scrollImageFrame];
-        
-        
-        NSLog(@"origin x: %f", scrollImageFrame.origin.x);
-        NSLog(@"width of scrollView: %f", scrollFrame.size.width);
-        NSLog(@"width of scrollimage: %f", scrollImageFrame.size.width);
-        NSLog(@"width of contentsize: %f", _scrollView.contentSize.width);
-        NSLog(@"width of cropwidth: %f", _cropView.frame.size.width);
-        
-        //[[self scrollView] setContentOffset:CGPointMake(self.frame.size.width/2, 0.0f)];
-        [[self scrollView] setOriginalWidth:scrollFrame.size.width];
-        [[self scrollView] setOriginalContentWidth:scrollFrame.size.width + 200];
-    }
-    
     [[self imageToCrop] setImage:_image];
     
     _minimumImageXOffset = (_cropViewXOffset + _cropView.bounds.size.width) - _imageToCrop.bounds.size.width;
     _minimumImageYOffset = (_cropViewYOffset + _cropView.bounds.size.height) - _imageToCrop.bounds.size.height;
-}
-
-- (void)setAllowPinchOutsideOfRadius:(BOOL)allowPinchOutsideOfRadius{
-    _allowPinchOutsideOfRadius = allowPinchOutsideOfRadius;
 }
 
 - (void)setCropAlpha:(CGFloat)cropAlpha{
@@ -306,11 +167,9 @@
         newWidth              = newHeight * proportion;
         
         /* handle edge case where the width we're about to assign is out of bounds */
-        if (!_allowPinchOutsideOfRadius && newWidth > _maximumPinch){
-            newWidth = _maximumPinch;
-            newHeight = newWidth * (image.size.height/image.size.width);
-            NSLog(@"reached width condition: %f %f", newWidth, newHeight);
-        }
+        newWidth = _maximumPinch;
+        newHeight = newWidth * (image.size.height/image.size.width);
+        NSLog(@"reached width condition: %f %f", newWidth, newHeight);
         
         
     }else{
@@ -320,11 +179,9 @@
         newHeight              = newWidth * proportion;
         
         /* handle edge case where the width we're about to assign is out of bounds */
-        if (!_allowPinchOutsideOfRadius && newHeight > _maximumPinch){
-            newHeight = _maximumPinch;
-            newWidth = newHeight * (image.size.width/image.size.height);
-            NSLog(@"reached height condition: %f %f", newWidth, newHeight);
-        }
+        newHeight = _maximumPinch;
+        newWidth = newHeight * (image.size.width/image.size.height);
+        NSLog(@"reached height condition: %f %f", newWidth, newHeight);
     }
     
     CGRect  dynamicImageViewFrame = [[self imageToCrop] frame];
@@ -392,7 +249,7 @@
         CGFloat gestureWidth  = [recognizer view].frame.size.width;
         CGFloat gestureHeight = [recognizer view].frame.size.height;
         
-        bool disAllowedPinch = _allowPinchOutsideOfRadius ? (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height) : (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > _maximumPinch || gestureHeight > _maximumPinch);
+        bool disAllowedPinch = (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > _maximumPinch || gestureHeight > _maximumPinch);
         
         if (outOfBounds || disAllowedPinch){
             
@@ -418,37 +275,20 @@
 
 - (UIImage *)croppedImage{
     
-    if (_useScrollView){
-        return [self croppedImageWithImage:_copiedImage rect:[self currentCropRect]];
-    }else{
-        return [self croppedImageWithImage:_image rect:[self currentCropRect]];
-    }
+    return [self croppedImageWithImage:_image rect:[self currentCropRect]];
 }
 
 - (CGRect)currentCropRect{
-    if (_useScrollView){
-        CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_scrollImageToCrop];
-        NSLog(@"crop size: %f %f", cropRect.size.width, cropRect.size.height);
-        CGFloat ratio   = 1.0f;
-        
-#warning I think this needs to be the original image chosen from the user
-#warning I think you should use this method instead of the arbitrary 5/4 ratio above
-        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_copiedImage.size, _scrollImageToCrop.bounds)) / _image.size.width;
-        NSLog(@"ratio: %f", ratio);
-        CGRect rect     = CGRectMake(cropRect.origin.x / ratio,cropRect.origin.y / ratio,cropRect.size.width / ratio,cropRect.size.height / ratio);
-        return rect;
-    }else{
-        /* this takes _cropView and puts it in _imageToCrop's coordinate space without moving it */
-        CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_imageToCrop];
-        NSLog(@"crop size: %f %f", cropRect.size.width, cropRect.size.height);
-        CGFloat ratio   = 1.0f;
-        
-        /*changes the rect you give it to another rect with the aspect ratio that you want */
-        ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _imageToCrop.bounds)) / _image.size.width;
-        NSLog(@"ratio: %f", ratio);
-        CGRect rect     = CGRectMake(cropRect.origin.x/ratio, cropRect.origin.y/ratio, cropRect.size.width/ratio, cropRect.size.height/ratio);
-        return rect;
-    }
+    /* this takes _cropView and puts it in _imageToCrop's coordinate space without moving it */
+    CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_imageToCrop];
+    NSLog(@"crop size: %f %f", cropRect.size.width, cropRect.size.height);
+    CGFloat ratio   = 1.0f;
+    
+    /*changes the rect you give it to another rect with the aspect ratio that you want */
+    ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _imageToCrop.bounds)) / _image.size.width;
+    NSLog(@"ratio: %f", ratio);
+    CGRect rect     = CGRectMake(cropRect.origin.x/ratio, cropRect.origin.y/ratio, cropRect.size.width/ratio, cropRect.size.height/ratio);
+    return rect;
 }
 
 - (UIImage *)croppedImageWithImage:(UIImage *)image rect:(CGRect)rect{
@@ -461,13 +301,6 @@
     CGImageRelease(croppedImage);
     
     return newImage;
-}
-
-
-#pragma mark - UIScrollViewDelegate
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-    return _scrollImageToCrop;
 }
 
 @end
