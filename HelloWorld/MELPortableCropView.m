@@ -22,14 +22,11 @@
 @property (nonatomic, assign) CGFloat                   cropViewYOffset;
 @property (nonatomic, assign) CGFloat                   minimumImageXOffset;
 @property (nonatomic, assign) CGFloat                   minimumImageYOffset;
-@property (nonatomic, assign) CGFloat                   maximumPinch;
 @property (nonatomic, assign) CGAffineTransform         originalTransform;
 
 @end
 
 @implementation MELPortableCropView
-
-#warning if they set a cropper with a bigger length than height but the image has a bigger height than length, you set the radius to have the same aspect ratio as the image.
 
 - (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize maximumRadius:(CGFloat)maximumRadius{
     self = [super initWithFrame:frame];
@@ -38,7 +35,8 @@
         NSLog(@"self clips: %ld", (long)self.clipsToBounds);
         [self setClipsToBounds:YES];
         
-#warning if they make the radius smaller than the cropper, use the formula where the image is a 4th as large as the cropper and the radius is a 4th as large as the image.
+        
+#warning if they make the radius smaller than the cropper, reverse the two sizes and make the image in-between.
         
         CGFloat widthDiff  = (maximumRadius < frame.size.width) ? frame.size.width : (maximumRadius - frame.size.width)/2;
         
@@ -50,8 +48,6 @@
         [self setCropSize:cropSize];
         [self setMaximumRadius:maximumRadius];
         
-        _maximumPinch = (cropSize.width + newFrame.size.width)/2;
-        NSLog(@"max pinch: %f", _maximumPinch);
     }
     return self;
 }
@@ -129,6 +125,7 @@
     _image = image;
     _copiedImage = [_image copy];
     
+    
     [self setCropFrame:[self centeredCropFrame]];
     [[self imageToCrop] setFrame:[self frameForGestureViewWithImage:_image]];
     
@@ -160,28 +157,22 @@
     
     NSLog(@"image dims: %f %f", image.size.width, image.size.height);
     
+#warning change this to make the image exactly halfway between the cropper and the max radius. use the CGRectFormula
+    
     if (image.size.width >= image.size.height){
+        
         /* make the height 5/4ths the size of the crop view */
         proportion            = image.size.width/image.size.height;
         newHeight             = _cropSize.height * (5.0f/4.0f);
         newWidth              = newHeight * proportion;
         
-        /* handle edge case where the width we're about to assign is out of bounds */
-        newWidth = _maximumPinch;
-        newHeight = newWidth * (image.size.height/image.size.width);
-        NSLog(@"reached width condition: %f %f", newWidth, newHeight);
-        
         
     }else{
+        NSLog(@"image is portrait");
         /* make the width 5/4ths the size of the crop view */
         proportion             = image.size.height/image.size.width;
         newWidth               = _cropSize.width * (5.0f/4.0f);
         newHeight              = newWidth * proportion;
-        
-        /* handle edge case where the width we're about to assign is out of bounds */
-        newHeight = _maximumPinch;
-        newWidth = newHeight * (image.size.width/image.size.height);
-        NSLog(@"reached height condition: %f %f", newWidth, newHeight);
     }
     
     CGRect  dynamicImageViewFrame = [[self imageToCrop] frame];
@@ -205,8 +196,6 @@
         
         CGFloat originX = pan.view.frame.origin.x;
         CGFloat originY = pan.view.frame.origin.y;
-        
-#warning change this to only check for out of bounds in ended, if its out of bounds, it snaps back to it's closest corner, don't worry about bounds as this isn't pinch
         
         if (originX < _cropViewXOffset && originY < _cropViewYOffset && originX > _minimumImageXOffset && originY > _minimumImageYOffset){
             [pan setTranslation:CGPointMake(0, 0) inView:pan.view.superview];
@@ -249,7 +238,9 @@
         CGFloat gestureWidth  = [recognizer view].frame.size.width;
         CGFloat gestureHeight = [recognizer view].frame.size.height;
         
-        bool disAllowedPinch = (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height || gestureWidth > _maximumPinch || gestureHeight > _maximumPinch);
+        bool disAllowedPinch = (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height);
+        
+        NSLog(@"bounds and pinch: %ld %ld", (long)outOfBounds, (long)disAllowedPinch);
         
         if (outOfBounds || disAllowedPinch){
             

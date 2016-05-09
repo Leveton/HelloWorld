@@ -11,12 +11,14 @@
 #import "CameraViewController.h"
 #import "MELDynamicCropView.h"
 #import "MELSuperCropView.h"
+#import "MELPortableCropView.h"
 
 #define imageWidth                                       (320.0f)
 
-@interface SuperCropViewController ()<CameraViewControllerDelegate, MELDynamicCropViewDelegate, MELSuperCropViewDelegate>
+@interface SuperCropViewController ()<CameraViewControllerDelegate, MELDynamicCropViewDelegate, MELSuperCropViewDelegate, MELPortableCropViewDelegate>
 @property (nonatomic, strong) MELDynamicCropView     *dynamicCrop;
 @property (nonatomic, strong) MELSuperCropView       *superCrop;
+@property (nonatomic, strong) MELPortableCropView    *portableCrop;
 @property (nonatomic, strong) UIImage                *image;
 @property (nonatomic, strong) UILabel                *label;
 @property (nonatomic, strong) UIImageView            *cropImageView;
@@ -130,6 +132,18 @@
     return _superCrop;
 }
 
+- (MELPortableCropView *)portableCrop{
+    if (!_portableCrop){
+        _portableCrop = [[MELPortableCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
+        [_portableCrop setBackgroundColor:[UIColor redColor]];
+        [_portableCrop setCropColor:[UIColor greenColor]];
+        [_portableCrop setCropAlpha:0.5f];
+        [_portableCrop setDelegate:self];
+        //[_portableCrop setAllowPinchOutsideOfRadius:YES];
+    }
+    return _portableCrop;
+}
+
 - (void)CameraViewController:(CameraViewController *)controller didFinishCroppingImage:(UIImage *)image transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect{
     
     __block UIImage *anImage = image;
@@ -140,8 +154,10 @@
             _image = anImage;
             //[[self dynamicCrop] setImage:_image];
             //[[self view] addSubview:[self dynamicCrop]];
-            [[self superCrop] setImage:_image];
-            [[self view] addSubview:[self superCrop]];
+            //[[self superCrop] setImage:_image];
+            //[[self view] addSubview:[self superCrop]];
+            [[self portableCrop] setImage:_image];
+            [[self view] addSubview:[self portableCrop]];
             NSLog(@"total view width: %f", self.view.frame.size.width);
             
         }else{
@@ -161,7 +177,7 @@
     //[[self cropImageView] setImage:[[self superCrop] croppedImage]];
     SuperCropModalViewController *vc = [[SuperCropModalViewController alloc] init];
     [[vc view] setBackgroundColor:[UIColor whiteColor]];
-    [vc setImage:[[self superCrop] croppedImage]];
+    [vc setImage:[[self portableCrop] croppedImage]];
     [vc setImageSize:CGSizeMake(320, 420)];
     [self presentViewController:vc animated:YES completion:nil];
 }
