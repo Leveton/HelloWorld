@@ -12,6 +12,14 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+typedef enum : NSUInteger{
+    kOrientationCenter,
+    kOrientationTopLeft,
+    kOrientationTopRight,
+    kOrientationBottomLeft,
+    kOrientationBottomRight,
+}ImageFrameOrientation;
+
 @interface MELPortableCropView()<UIScrollViewDelegate>
 @property (nonatomic, strong) UIImageView               *imageToCrop;
 @property (nonatomic, strong) CropView                  *cropView;
@@ -23,6 +31,7 @@
 @property (nonatomic, assign) CGFloat                   minimumImageXOffset;
 @property (nonatomic, assign) CGFloat                   minimumImageYOffset;
 @property (nonatomic, assign) CGAffineTransform         originalTransform;
+@property (nonatomic, assign) ImageFrameOrientation     currentOrientation;
 
 @end
 
@@ -32,7 +41,6 @@
     self = [super initWithFrame:frame];
     if (self){
         
-        NSLog(@"self clips: %ld", (long)self.clipsToBounds);
         [self setClipsToBounds:YES];
         
         
@@ -103,6 +111,46 @@
     }
     return _pinch;
 }
+
+- (CGFloat)distanceFromPoint:(CGPoint)pointA toPoint:(CGPoint)pointB{
+    return sqrt((pointA.x - pointB.x) * (pointA.x - pointB.x) + (pointA.y - pointB.y) * (pointA.y - pointB.y));
+}
+
+- (CGPoint)orientationCenteredWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = _cropViewXOffset -  (size.width - _cropView.bounds.size.width)/2;
+    point.y    = _cropViewYOffset -  (size.height - _cropView.bounds.size.height)/2;
+    return point;
+}
+
+- (CGPoint)orientationTopLeftWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = _cropViewXOffset;
+    point.y    = _cropViewYOffset;
+    return point;
+}
+
+- (CGPoint)orientationTopRightWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = CGRectGetMaxX([_cropView frame]) - size.width;
+    point.y    = _cropViewYOffset;
+    return point;
+}
+
+- (CGPoint)orientationBottomLeftWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = _cropViewXOffset;
+    point.y    = CGRectGetMaxY([_cropView frame]) - size.height;
+    return point;
+}
+
+- (CGPoint)orientationBottomRightWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = CGRectGetMaxX([_cropView frame]) - size.width;
+    point.y    = CGRectGetMaxY([_cropView frame]) - size.height;
+    return point;
+}
+
 
 #pragma mark - setters
 
@@ -179,49 +227,36 @@
     }
     
     CGRect  dynamicImageViewFrame = [[self imageToCrop] frame];
-    dynamicImageViewFrame.size.width  = newWidth;
-    dynamicImageViewFrame.size.height = newHeight;
-    dynamicImageViewFrame.origin      = [self orientationCenteredWithSize:CGSizeMake(newWidth, newHeight)];
+    CGSize size = CGSizeMake(newWidth, newHeight);
+    dynamicImageViewFrame.size  = size;
+    CGPoint orientation;
+    
+    switch (_currentOrientation) {
+        case kOrientationCenter:
+            orientation = [self orientationCenteredWithSize:size];
+            break;
+        case kOrientationTopLeft:
+            orientation = [self orientationTopLeftWithSize:size];
+            break;
+        case kOrientationTopRight:
+            orientation = [self orientationTopRightWithSize:size];
+            break;
+        case kOrientationBottomLeft:
+            orientation = [self orientationBottomLeftWithSize:size];
+            break;
+        case kOrientationBottomRight:
+            orientation = [self orientationBottomRightWithSize:size];
+            break;
+        default:
+            orientation = [self orientationCenteredWithSize:size];
+            break;
+    }
+    
+    dynamicImageViewFrame.origin      = orientation;
     
     NSLog(@"gesture dims: %f %f", dynamicImageViewFrame.size.width, dynamicImageViewFrame.size.height);
     
     return dynamicImageViewFrame;
-}
-
-
-- (CGPoint)orientationCenteredWithSize:(CGSize)size{
-    CGPoint point = CGPointZero;
-    point.x    = _cropViewXOffset -  (size.width - _cropView.bounds.size.width)/2;
-    point.y    = _cropViewYOffset -  (size.height - _cropView.bounds.size.height)/2;
-    return point;
-}
-
-- (CGPoint)orientationTopLeftWithSize:(CGSize)size{
-    CGPoint point = CGPointZero;
-    point.x    = _cropViewXOffset;
-    point.y    = _cropViewYOffset;
-    return point;
-}
-
-- (CGPoint)orientationTopRightWithSize:(CGSize)size{
-    CGPoint point = CGPointZero;
-    point.x    = CGRectGetMaxX([_cropView frame]) - size.width;
-    point.y    = _cropViewYOffset;
-    return point;
-}
-
-- (CGPoint)orientationBottomLeftWithSize:(CGSize)size{
-    CGPoint point = CGPointZero;
-    point.x    = _cropViewXOffset;
-    point.y    = CGRectGetMaxY([_cropView frame]) - size.height;
-    return point;
-}
-
-- (CGPoint)orientationBottomRightWithSize:(CGSize)size{
-    CGPoint point = CGPointZero;
-    point.x    = CGRectGetMaxX([_cropView frame]) - size.width;
-    point.y    = CGRectGetMaxY([_cropView frame]) - size.height;
-    return point;
 }
 
 - (void)didPan:(UIPanGestureRecognizer *)pan{
@@ -268,6 +303,10 @@
         CGFloat cropperMaxX    = _cropViewXOffset + _cropSize.width;
         CGFloat cropperMaxY    = _cropViewYOffset + _cropSize.height;
         bool outOfBounds       = NO;
+        
+#warning put this in out of bounds block
+        //this is top left to top left
+        NSLog(@"distance: %f", [self distanceFromPoint:CGPointMake(originX, originY) toPoint:CGPointMake(_cropViewXOffset, _cropViewYOffset)]);
         
         NSLog(@"crop dims: %f %f %f %f %f %f", originX, originY, _cropViewXOffset, _cropViewYOffset, _minimumImageXOffset, _minimumImageYOffset);
         NSLog(@"max dims: %f %f %f %f", gestureMaxX, gestureMaxY, cropperMaxX, cropperMaxY);
