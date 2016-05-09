@@ -125,6 +125,9 @@
     _image = image;
     _copiedImage = [_image copy];
     
+#warning What if image is panoramic but cropper also landscape?
+    
+#warning What if image is portrait but cropper is landscape?
     
     [self setCropFrame:[self centeredCropFrame]];
     [[self imageToCrop] setFrame:[self frameForGestureViewWithImage:_image]];
@@ -157,13 +160,12 @@
     
     NSLog(@"image dims: %f %f", image.size.width, image.size.height);
     
-#warning change this to make the image exactly halfway between the cropper and the max radius. use the CGRectFormula
-    
     if (image.size.width >= image.size.height){
         
         /* make the height 5/4ths the size of the crop view */
         proportion            = image.size.width/image.size.height;
-        newHeight             = _cropSize.height * (5.0f/4.0f);
+        //newHeight             = _cropSize.height * (5.0f/4.0f);
+        newHeight             = (_cropSize.height + _maximumRadius)/2;
         newWidth              = newHeight * proportion;
         
         
@@ -171,7 +173,8 @@
         NSLog(@"image is portrait");
         /* make the width 5/4ths the size of the crop view */
         proportion             = image.size.height/image.size.width;
-        newWidth               = _cropSize.width * (5.0f/4.0f);
+        //newWidth               = _cropSize.width * (5.0f/4.0f);
+        newWidth               = (_cropSize.width + _maximumRadius)/2;
         newHeight              = newWidth * proportion;
     }
     
@@ -220,6 +223,9 @@
         /* first check if the new x and y offsets are too far below or too far above the cropper, gesture will get stuck if you let this go */
         
 #warning find the image y offset plus the height of the image and make sure it is greator than the y offset + height of the cropper. you may need to do this for the width as well
+        
+#warning Use a case statement to find the closest corner. Use CGRect getters for centered, top-left etc.
+        
         CGFloat originX = recognizer.view.frame.origin.x;
         CGFloat originY = recognizer.view.frame.origin.y;
         CGFloat gestureMaxX    = originX + recognizer.view.frame.size.width;
