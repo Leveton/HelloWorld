@@ -181,12 +181,47 @@
     CGRect  dynamicImageViewFrame = [[self imageToCrop] frame];
     dynamicImageViewFrame.size.width  = newWidth;
     dynamicImageViewFrame.size.height = newHeight;
-    dynamicImageViewFrame.origin.x    = _cropViewXOffset -  (newWidth - _cropView.bounds.size.width)/2;
-    dynamicImageViewFrame.origin.y    = _cropViewYOffset -  (newHeight - _cropView.bounds.size.height)/2;
+    dynamicImageViewFrame.origin      = [self orientationCenteredWithSize:CGSizeMake(newWidth, newHeight)];
     
     NSLog(@"gesture dims: %f %f", dynamicImageViewFrame.size.width, dynamicImageViewFrame.size.height);
     
     return dynamicImageViewFrame;
+}
+
+
+- (CGPoint)orientationCenteredWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = _cropViewXOffset -  (size.width - _cropView.bounds.size.width)/2;
+    point.y    = _cropViewYOffset -  (size.height - _cropView.bounds.size.height)/2;
+    return point;
+}
+
+- (CGPoint)orientationTopLeftWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = _cropViewXOffset;
+    point.y    = _cropViewYOffset;
+    return point;
+}
+
+- (CGPoint)orientationTopRightWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = CGRectGetMaxX([_cropView frame]) - size.width;
+    point.y    = _cropViewYOffset;
+    return point;
+}
+
+- (CGPoint)orientationBottomLeftWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = _cropViewXOffset;
+    point.y    = CGRectGetMaxY([_cropView frame]) - size.height;
+    return point;
+}
+
+- (CGPoint)orientationBottomRightWithSize:(CGSize)size{
+    CGPoint point = CGPointZero;
+    point.x    = CGRectGetMaxX([_cropView frame]) - size.width;
+    point.y    = CGRectGetMaxY([_cropView frame]) - size.height;
+    return point;
 }
 
 - (void)didPan:(UIPanGestureRecognizer *)pan{
