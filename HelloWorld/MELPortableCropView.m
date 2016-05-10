@@ -294,36 +294,64 @@ typedef enum : NSUInteger{
         
 #warning find the image y offset plus the height of the image and make sure it is greator than the y offset + height of the cropper. you may need to do this for the width as well
         
-#warning Use a case statement to find the closest corner. Use CGRect getters for centered, top-left etc.
-        
-        CGFloat originX = recognizer.view.frame.origin.x;
-        CGFloat originY = recognizer.view.frame.origin.y;
-        CGFloat gestureMaxX    = originX + recognizer.view.frame.size.width;
-        CGFloat gestureMaxY    = originY + recognizer.view.frame.size.height;
+        CGFloat gestureOriginX = recognizer.view.frame.origin.x;
+        CGFloat gestureOriginY = recognizer.view.frame.origin.y;
+        CGFloat gestureMaxX    = gestureOriginX + recognizer.view.frame.size.width;
+        CGFloat gestureMaxY    = gestureOriginY + recognizer.view.frame.size.height;
         CGFloat cropperMaxX    = _cropViewXOffset + _cropSize.width;
         CGFloat cropperMaxY    = _cropViewYOffset + _cropSize.height;
         bool outOfBounds       = NO;
         
-#warning put this in out of bounds block
-#warning break outOfBounds into two checks and then use MAX(A, B) to get the orientation. you may have to do a third MAX to be sure
-        //this is top left to top left
-        NSLog(@"distance: %f", [self distanceFromPoint:CGPointMake(originX, originY) toPoint:CGPointMake(_cropViewXOffset, _cropViewYOffset)]);
-        
-        NSLog(@"crop dims: %f %f %f %f %f %f", originX, originY, _cropViewXOffset, _cropViewYOffset, _minimumImageXOffset, _minimumImageYOffset);
-        NSLog(@"max dims: %f %f %f %f", gestureMaxX, gestureMaxY, cropperMaxX, cropperMaxY);
-        
-        if (cropperMaxX > gestureMaxX || cropperMaxY > gestureMaxY || originX > _cropViewXOffset || originY > _cropViewYOffset){
-            outOfBounds = YES;
-        }
+        outOfBounds = (cropperMaxX > gestureMaxX || cropperMaxY > gestureMaxY || gestureOriginX > _cropViewXOffset || gestureOriginY > _cropViewYOffset);
         
         CGFloat gestureWidth  = [recognizer view].frame.size.width;
         CGFloat gestureHeight = [recognizer view].frame.size.height;
         
         bool disAllowedPinch = (gestureWidth < _cropSize.width || gestureHeight < _cropSize.height);
         
-        NSLog(@"bounds and pinch: %ld %ld", (long)outOfBounds, (long)disAllowedPinch);
-        
         if (outOfBounds || disAllowedPinch){
+            
+            NSMutableArray *distanceArray = [NSMutableArray array];
+            NSNumber *topLeft;
+            NSNumber *topRight;
+            NSNumber *bottomLeft;
+            NSNumber *bottomRight;
+            
+            if (CGRectContainsPoint(_cropView.frame, CGPointMake(gestureOriginX, gestureOriginY))){
+                topLeft = [NSNumber numberWithFloat:[self distanceFromPoint:CGPointMake(gestureOriginX, gestureOriginY) toPoint:CGPointMake(_cropViewXOffset, _cropViewYOffset)]];
+                [distanceArray addObject:topLeft];
+            }
+            if (CGRectContainsPoint(_cropView.frame, CGPointMake(gestureMaxX, gestureOriginY))){
+                topRight = [NSNumber numberWithFloat:[self distanceFromPoint:CGPointMake(gestureMaxX, gestureOriginY) toPoint:CGPointMake(cropperMaxX, _cropViewYOffset)]];
+                [distanceArray addObject:topRight];
+            }
+            if (CGRectContainsPoint(_cropView.frame, CGPointMake(gestureOriginX, gestureMaxY))){
+                bottomLeft = [NSNumber numberWithFloat:[self distanceFromPoint:CGPointMake(gestureOriginX, gestureMaxY) toPoint:CGPointMake(_cropViewXOffset, cropperMaxY)]];
+                [distanceArray addObject:bottomLeft];
+            }
+            if (CGRectContainsPoint(_cropView.frame, CGPointMake(gestureMaxX, gestureMaxY))){
+                bottomRight = [NSNumber numberWithFloat:[self distanceFromPoint:CGPointMake(gestureMaxX, gestureMaxY) toPoint:CGPointMake(cropperMaxX, cropperMaxY)]];
+                [distanceArray addObject:bottomRight];
+            }
+            
+            NSArray *sortedDistances    =[distanceArray sortedArrayUsingSelector:@selector(compare:)];
+            
+            if (sortedDistances.count > 0){
+                NSNumber *closestDistance = [sortedDistances objectAtIndex:0];
+                if ([closestDistance isEqual:topLeft]){
+                    _currentOrientation = kOrientationTopLeft;
+                }else if ([closestDistance isEqual:topRight]){
+                    _currentOrientation = kOrientationTopRight;
+                }else if ([closestDistance isEqual:bottomLeft]){
+                    _currentOrientation = kOrientationBottomLeft;
+                }else if ([closestDistance isEqual:bottomRight]){
+                    _currentOrientation = kOrientationBottomRight;
+                }else{
+                    _currentOrientation = kOrientationCenter;
+                }
+            }else{
+                _currentOrientation = kOrientationCenter;
+            }
             
             [UIView animateWithDuration:0.2f
                                   delay:0.0f
@@ -353,12 +381,10 @@ typedef enum : NSUInteger{
 - (CGRect)currentCropRect{
     /* this takes _cropView and puts it in _imageToCrop's coordinate space without moving it */
     CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_imageToCrop];
-    NSLog(@"crop size: %f %f", cropRect.size.width, cropRect.size.height);
     CGFloat ratio   = 1.0f;
     
     /*changes the rect you give it to another rect with the aspect ratio that you want */
     ratio           = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _imageToCrop.bounds)) / _image.size.width;
-    NSLog(@"ratio: %f", ratio);
     CGRect rect     = CGRectMake(cropRect.origin.x/ratio, cropRect.origin.y/ratio, cropRect.size.width/ratio, cropRect.size.height/ratio);
     return rect;
 }
