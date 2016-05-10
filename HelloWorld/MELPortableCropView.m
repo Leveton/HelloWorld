@@ -305,6 +305,7 @@ typedef enum : NSUInteger{
         bool outOfBounds       = NO;
         
 #warning put this in out of bounds block
+#warning break outOfBounds into two checks and then use MAX(A, B) to get the orientation. you may have to do a third MAX to be sure
         //this is top left to top left
         NSLog(@"distance: %f", [self distanceFromPoint:CGPointMake(originX, originY) toPoint:CGPointMake(_cropViewXOffset, _cropViewYOffset)]);
         
