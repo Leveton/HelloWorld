@@ -134,14 +134,27 @@
 
 - (MELPortableCropView *)portableCrop{
     if (!_portableCrop){
-        _portableCrop = [[MELPortableCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
+        _portableCrop = [[MELPortableCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(420.0f, 320.0f) maximumRadius:900];
         [_portableCrop setBackgroundColor:[UIColor redColor]];
         [_portableCrop setCropColor:[UIColor greenColor]];
         [_portableCrop setCropAlpha:0.5f];
         [_portableCrop setDelegate:self];
-        //[_portableCrop setAllowPinchOutsideOfRadius:YES];
     }
     return _portableCrop;
+}
+
+- (CGRect)randomFrame{
+    CGRect frame = CGRectZero;
+    frame.size = CGSizeMake(500, 500);
+    frame.origin = CGPointMake(300, 300);
+    return frame;
+}
+
+- (CGRect)smallFrame{
+    CGRect frame = CGRectZero;
+    frame.size = CGSizeMake(100, 100);
+    frame.origin = CGPointMake(100, 100);
+    return frame;
 }
 
 - (void)CameraViewController:(CameraViewController *)controller didFinishCroppingImage:(UIImage *)image transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect{
@@ -178,7 +191,7 @@
     SuperCropModalViewController *vc = [[SuperCropModalViewController alloc] init];
     [[vc view] setBackgroundColor:[UIColor whiteColor]];
     [vc setImage:[[self portableCrop] croppedImage]];
-    [vc setImageSize:CGSizeMake(320, 420)];
+    [vc setImageSize:[[self portableCrop] cropSize]];
     [self presentViewController:vc animated:YES completion:nil];
 }
 

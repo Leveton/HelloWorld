@@ -43,8 +43,29 @@ typedef enum : NSUInteger{
         
         [self setClipsToBounds:YES];
         
+        CGFloat adjustedWidth;
+        CGFloat adjustedHeight;
         
-#warning if they make the radius smaller than the cropper, reverse the two sizes and make the image in-between.
+        if (cropSize.width > cropSize.height){
+            if (cropSize.width > maximumRadius){
+                CGFloat proportion = cropSize.height/cropSize.width;
+                adjustedWidth      = maximumRadius;
+                adjustedHeight     = adjustedWidth * proportion;
+                maximumRadius      = cropSize.width;
+                cropSize = CGSizeMake(adjustedWidth, adjustedHeight);
+            }
+        }else{
+            if (cropSize.height > maximumRadius){
+                CGFloat proportion = cropSize.width/cropSize.height;
+                adjustedHeight     = maximumRadius;
+                adjustedWidth      = adjustedHeight * proportion;
+                maximumRadius      = cropSize.height;
+                cropSize = CGSizeMake(adjustedWidth, adjustedHeight);
+            }
+        }
+        
+        
+#warning you need to honor the origin from the init
         
         CGFloat widthDiff  = (maximumRadius < frame.size.width) ? frame.size.width : (maximumRadius - frame.size.width)/2;
         
@@ -173,10 +194,6 @@ typedef enum : NSUInteger{
     _image = image;
     _copiedImage = [_image copy];
     
-#warning What if image is panoramic but cropper also landscape?
-    
-#warning What if image is portrait but cropper is landscape?
-    
     [self setCropFrame:[self centeredCropFrame]];
     [[self imageToCrop] setFrame:[self frameForGestureViewWithImage:_image]];
     
@@ -291,8 +308,6 @@ typedef enum : NSUInteger{
     if ([recognizer state] == UIGestureRecognizerStateEnded){
         
         /* first check if the new x and y offsets are too far below or too far above the cropper, gesture will get stuck if you let this go */
-        
-#warning find the image y offset plus the height of the image and make sure it is greator than the y offset + height of the cropper. you may need to do this for the width as well
         
         CGFloat gestureOriginX = recognizer.view.frame.origin.x;
         CGFloat gestureOriginY = recognizer.view.frame.origin.y;
