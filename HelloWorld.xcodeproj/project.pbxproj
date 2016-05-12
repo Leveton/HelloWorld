@@ -26,6 +26,7 @@
 		1CBBD9231CBEF2FE00783331 /* MELSuperCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBD9221CBEF2FE00783331 /* MELSuperCropView.m */; };
 		1CBBD9261CBF07C600783331 /* SuperCropViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBD9251CBF07C600783331 /* SuperCropViewController.m */; };
 		1CBBD9291CBF3BA900783331 /* MELDynamicCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBD9281CBF3BA900783331 /* MELDynamicCropView.m */; };
+		1CCFFA721CE529CC0052F0DE /* MELCropView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CCFFA711CE529CC0052F0DE /* MELCropView.m */; };
 		1CE909521CD94C180036AA12 /* ZoomingImageScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CE909511CD94C180036AA12 /* ZoomingImageScrollView.m */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +86,8 @@
 		1CBBD9251CBF07C600783331 /* SuperCropViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperCropViewController.m; sourceTree = "<group>"; };
 		1CBBD9271CBF3BA900783331 /* MELDynamicCropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MELDynamicCropView.h; sourceTree = "<group>"; };
 		1CBBD9281CBF3BA900783331 /* MELDynamicCropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MELDynamicCropView.m; sourceTree = "<group>"; };
+		1CCFFA701CE529CC0052F0DE /* MELCropView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MELCropView.h; sourceTree = "<group>"; };
+		1CCFFA711CE529CC0052F0DE /* MELCropView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MELCropView.m; sourceTree = "<group>"; };
 		1CE909501CD94C180036AA12 /* ZoomingImageScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZoomingImageScrollView.h; sourceTree = "<group>"; };
 		1CE909511CD94C180036AA12 /* ZoomingImageScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZoomingImageScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,6 +154,8 @@
 				1CBBD9281CBF3BA900783331 /* MELDynamicCropView.m */,
 				1C7119901CDD41F600F58D4E /* MELPortableCropView.h */,
 				1C7119911CDD41F600F58D4E /* MELPortableCropView.m */,
+				1CCFFA701CE529CC0052F0DE /* MELCropView.h */,
+				1CCFFA711CE529CC0052F0DE /* MELCropView.m */,
 				1C4F15091CBD41E500DDA173 /* CropView.h */,
 				1C4F150A1CBD41E500DDA173 /* CropView.m */,
 				1C3C31601CB845B10054F82D /* CameraViewController.h */,
@@ -335,6 +340,7 @@
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
 				1CE909521CD94C180036AA12 /* ZoomingImageScrollView.m in Sources */,
 				1CBBD9291CBF3BA900783331 /* MELDynamicCropView.m in Sources */,
+				1CCFFA721CE529CC0052F0DE /* MELCropView.m in Sources */,
 				1C3C316E1CB847EB0054F82D /* UIImage+PhotoCrop.m in Sources */,
 				1C7119921CDD41F600F58D4E /* MELPortableCropView.m in Sources */,
 				1C3C31621CB845B10054F82D /* CameraViewController.m in Sources */,
