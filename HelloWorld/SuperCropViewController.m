@@ -14,7 +14,7 @@
 #import "MELCropView.h"
 #import "MELPortableCropView.h"
 
-#define imageWidth                                       (350.0f)
+#define imageWidth                                       (200.0f)
 
 @interface SuperCropViewController ()<CameraViewControllerDelegate, MELDynamicCropViewDelegate, MELSuperCropViewDelegate, MELPortableCropViewDelegate, MELCropViewDelegate>
 @property (nonatomic, strong) MELDynamicCropView     *dynamicCrop;
@@ -24,6 +24,7 @@
 @property (nonatomic, strong) UIImage                *image;
 @property (nonatomic, strong) UILabel                *label;
 @property (nonatomic, strong) UIImageView            *cropImageView;
+@property (nonatomic, strong) UILabel                *showLabel;
 @end
 
 @implementation SuperCropViewController
@@ -41,10 +42,16 @@
     labelFrame.size.width  = CGRectGetWidth([[self view] frame]);
     [[self label] setFrame:labelFrame];
     
-    CGRect cropImageFrame = [[self cropImageView] frame];
-    cropImageFrame.size     = CGSizeMake(imageWidth, imageWidth);
-    cropImageFrame.origin.x = CGRectGetWidth([[self view] frame]) - cropImageFrame.size.width;
-    [[self cropImageView] setFrame:cropImageFrame];
+    CGRect showLabelFrame = [[self showLabel] frame];
+    showLabelFrame.size.height = 60.0f;
+    showLabelFrame.size.width  = CGRectGetWidth([[self view] frame]);
+    showLabelFrame.origin.y    = CGRectGetHeight([[self view] frame]) - showLabelFrame.size.height;
+    [[self showLabel] setFrame:showLabelFrame];
+    
+//    CGRect cropImageFrame = [[self cropImageView] frame];
+//    cropImageFrame.size     = CGSizeMake(imageWidth, imageWidth);
+//    cropImageFrame.origin.x = CGRectGetWidth([[self view] frame]) - cropImageFrame.size.width;
+//    [[self cropImageView] setFrame:cropImageFrame];
 
 }
 
@@ -54,6 +61,34 @@
     cropFrame.origin.y  = (CGRectGetHeight([[self view] frame]) - cropFrame.size.height)/2;
     cropFrame.origin.x  = (CGRectGetWidth([[self view] frame]) - cropFrame.size.width)/2;
     return cropFrame;
+}
+
+- (CGRect)randomFrame0{
+    CGRect frame = CGRectZero;
+    frame.size = CGSizeMake(500, 500);
+    frame.origin = CGPointMake(300, 300);
+    return frame;
+}
+
+- (CGRect)randomFrame1{
+    CGRect frame = CGRectZero;
+    frame.size = CGSizeMake(100, 100);
+    frame.origin = CGPointMake(100, 100);
+    return frame;
+}
+
+- (CGRect)randomFrame2{
+    CGRect frame = CGRectZero;
+    frame.size = CGSizeMake(500, 500);
+    frame.origin = CGPointMake(300, 300);
+    return frame;
+}
+
+- (CGRect)randomFrame3{
+    CGRect frame = CGRectZero;
+    frame.size = CGSizeMake(100, 100);
+    frame.origin = CGPointMake(100, 100);
+    return frame;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -66,15 +101,31 @@
 - (UILabel *)label{
     if (!_label){
         _label = [[UILabel alloc] initWithFrame:CGRectZero];
-        [_label setText:@"Crop"];
+        [_label setText:@"Present"];
         [_label setTextAlignment:NSTextAlignmentCenter];
         [_label setUserInteractionEnabled:YES];
+        [[_label layer] setZPosition:3.0f];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTap:)];
         [_label addGestureRecognizer:tap];
         [[self view] addSubview:_label];
         return _label;
     }
     return _label;
+}
+
+- (UILabel *)showLabel{
+    if (!_showLabel){
+        _showLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+        [_showLabel setText:@"Show"];
+        [_showLabel setTextAlignment:NSTextAlignmentCenter];
+        [_showLabel setUserInteractionEnabled:YES];
+        [[_showLabel layer] setZPosition:3.0f];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapCrop:)];
+        [_showLabel addGestureRecognizer:tap];
+        [[self view] addSubview:_showLabel];
+        return _showLabel;
+    }
+    return _showLabel;
 }
 
 - (UIImageView *)cropImageView{
@@ -86,7 +137,7 @@
         [[_cropImageView layer] setZPosition:4.0f];
         UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapCrop:)];
         [_cropImageView addGestureRecognizer:tap];
-        [[self view] addSubview:_cropImageView];
+        //[[self view] addSubview:_cropImageView];
     }
     return _cropImageView;
 }
@@ -147,27 +198,13 @@
 
 - (MELCropView *)melCropView{
     if (!_melCropView){
-        _melCropView = [[MELCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(460.0f, 460)];
+        _melCropView = [[MELCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(50.0f, 50)];
         [_melCropView setBackgroundColor:[UIColor redColor]];
         [_melCropView setCropColor:[UIColor greenColor]];
         [_melCropView setCropAlpha:0.5f];
         [_melCropView setDelegate:self];
     }
     return _melCropView;
-}
-
-- (CGRect)randomFrame{
-    CGRect frame = CGRectZero;
-    frame.size = CGSizeMake(500, 500);
-    frame.origin = CGPointMake(300, 300);
-    return frame;
-}
-
-- (CGRect)smallFrame{
-    CGRect frame = CGRectZero;
-    frame.size = CGSizeMake(100, 100);
-    frame.origin = CGPointMake(100, 100);
-    return frame;
 }
 
 - (void)CameraViewController:(CameraViewController *)controller didFinishCroppingImage:(UIImage *)image transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect{

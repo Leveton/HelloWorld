@@ -51,22 +51,19 @@ typedef enum : NSUInteger{
             if (cropSize.width > frame.size.width){
                 [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
             }else if (cropSize.height > frame.size.height){
-                
                 [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
             }else{
+                NSLog(@"reached fell through both");
                 [self setCropSize:cropSize];
             }
         }else{
             /* give preference to height */
-            //[self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
-            
             if (cropSize.height > frame.size.height){
-                NSLog(@"reached height > height");
                 [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
             }else if (cropSize.width > frame.size.width){
-                
                 [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
             }else{
+                NSLog(@"reached fell through both");
                 [self setCropSize:cropSize];
             }
         }
@@ -99,6 +96,7 @@ typedef enum : NSUInteger{
 }
 
 - (void)setUpGeometryForWidthWithFrame:(CGRect)frame cropSize:(CGSize)cropSize{
+    NSLog(@"reached setup geo with width");
     CGFloat cropProportion = cropSize.height/cropSize.width;
     CGFloat adjustedWidth      = frame.size.width;
     CGFloat adjustedHeight     = adjustedWidth * cropProportion;
@@ -112,6 +110,7 @@ typedef enum : NSUInteger{
 }
 
 - (void)setUpGeometryForHeightWithFrame:(CGRect)frame cropSize:(CGSize)cropSize{
+    NSLog(@"reached setup geo with height");
     CGFloat cropProportion = cropSize.width/cropSize.height;
     CGFloat adjustedHeight     = frame.size.height;
     CGFloat adjustedWidth      = adjustedHeight * cropProportion;
