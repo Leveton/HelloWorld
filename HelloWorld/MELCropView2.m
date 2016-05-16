@@ -6,8 +6,7 @@
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 
-#import "MELCropView.h"
-//#import "CropView.h"
+#import "MELCropView2.h"
 
 #import <AVFoundation/AVFoundation.h>
 
@@ -19,12 +18,13 @@ typedef enum : NSUInteger{
     kOrientationBottomRight,
 }ImageFrameOrientation;
 
-@interface MELCropView()
+@interface MELCropView2()
 @property (nonatomic, strong) UIImageView               *imageToCrop;
 @property (nonatomic, strong) UIView                    *cropView;
 @property (nonatomic, strong) UIImage                   *copiedImage;
 @property (nonatomic, strong) UIPanGestureRecognizer    *pan;
 @property (nonatomic, strong) UIPinchGestureRecognizer  *pinch;
+@property (nonatomic, assign) CGSize                    cropSize;
 @property (nonatomic, assign) CGFloat                   cropViewXOffset;
 @property (nonatomic, assign) CGFloat                   cropViewYOffset;
 @property (nonatomic, assign) CGFloat                   minimumImageXOffset;
@@ -34,7 +34,40 @@ typedef enum : NSUInteger{
 
 @end
 
-@implementation MELCropView
+@implementation MELCropView2
+
+- (id)initWithFrame:(CGRect)frame cropFrame:(CGRect)cropFrame{
+    self = [super initWithFrame:frame];
+    if (self){
+        [self setClipsToBounds:YES];
+        CGSize cropSize = cropFrame.size;
+        
+        if (frame.size.width > frame.size.height){
+            /* give preference to width */
+            if (cropSize.width > frame.size.width){
+                [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
+            }else if (cropSize.height > frame.size.height){
+                [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
+            }else{
+                NSLog(@"reached fell through both");
+                [self setCropSize:cropSize];
+            }
+        }else{
+            /* give preference to height */
+            if (cropSize.height > frame.size.height){
+                [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
+            }else if (cropSize.width > frame.size.width){
+                [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
+            }else{
+                NSLog(@"reached fell through both");
+                [self setCropSize:cropSize];
+            }
+        }
+    }
+    
+    [self setCropFrame:cropFrame];
+    return self;
+}
 
 - (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize{
     self = [super initWithFrame:frame];
@@ -100,7 +133,7 @@ typedef enum : NSUInteger{
 
 - (UIView *)cropView{
     if (!_cropView){
-        _cropView = [[UIView alloc] initWithFrame:CGRectZero];
+        _cropView = [[UIView alloc] initWithFrame:_cropFrame];
         
         /* default crop color and opacity */
         [_cropView setBackgroundColor:[UIColor blueColor]];
@@ -124,14 +157,6 @@ typedef enum : NSUInteger{
         return _imageToCrop;
     }
     return _imageToCrop;
-}
-
-- (CGRect)centeredCropFrame{
-    CGRect cropFrame   = CGRectZero;
-    cropFrame.size     = _cropSize;
-    cropFrame.origin.x = (CGRectGetWidth([self frame]) - _cropSize.width)/2;
-    cropFrame.origin.y = (CGRectGetHeight([self frame]) - _cropSize.height)/2;
-    return cropFrame;
 }
 
 - (UIPanGestureRecognizer *)pan{
@@ -205,7 +230,6 @@ typedef enum : NSUInteger{
     _image = image;
     _copiedImage = [_image copy];
     
-    [self setCropFrame:[self centeredCropFrame]];
     [[self imageToCrop] setFrame:[self frameForGestureViewWithImage:_image]];
     
     _originalTransform = _imageToCrop.transform;

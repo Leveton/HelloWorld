@@ -12,15 +12,17 @@
 #import "MELDynamicCropView.h"
 #import "MELSuperCropView.h"
 #import "MELCropView.h"
+#import "MELCropView2.h"
 #import "MELPortableCropView.h"
 
-#define imageWidth                                       (200.0f)
+#define imageWidth                                       (400.0f)
 
 @interface SuperCropViewController ()<CameraViewControllerDelegate, MELDynamicCropViewDelegate, MELSuperCropViewDelegate, MELPortableCropViewDelegate, MELCropViewDelegate>
 @property (nonatomic, strong) MELDynamicCropView     *dynamicCrop;
 @property (nonatomic, strong) MELSuperCropView       *superCrop;
 @property (nonatomic, strong) MELPortableCropView    *portableCrop;
 @property (nonatomic, strong) MELCropView            *melCropView;
+@property (nonatomic, strong) MELCropView2            *melCropView2;
 @property (nonatomic, strong) UIImage                *image;
 @property (nonatomic, strong) UILabel                *label;
 @property (nonatomic, strong) UIImageView            *cropImageView;
@@ -55,32 +57,41 @@
 
 }
 
+- (CGRect)viewFrame{
+    CGRect frame = CGRectZero;
+    frame.size      = CGSizeMake(imageWidth, imageWidth);
+    frame.origin.y  = (CGRectGetHeight([[self view] frame]) - frame.size.height)/2;
+    frame.origin.x  = (CGRectGetWidth([[self view] frame]) - frame.size.width)/2;
+    return frame;
+}
+
 - (CGRect)cropFrame{
-    CGRect cropFrame = CGRectZero;
-    cropFrame.size      = CGSizeMake(imageWidth, imageWidth);
-    cropFrame.origin.y  = (CGRectGetHeight([[self view] frame]) - cropFrame.size.height)/2;
-    cropFrame.origin.x  = (CGRectGetWidth([[self view] frame]) - cropFrame.size.width)/2;
-    return cropFrame;
+    CGRect frame = CGRectZero;
+    frame.size      = CGSizeMake(200, 200);
+    frame.origin.y  = (CGRectGetHeight([self viewFrame]) - frame.size.height)/2;
+    frame.origin.x  = (CGRectGetWidth([self viewFrame]) - frame.size.width)/2;
+    return frame;
 }
 
 - (CGRect)randomFrame0{
     CGRect frame = CGRectZero;
-    frame.size = CGSizeMake(500, 500);
-    frame.origin = CGPointMake(300, 300);
+    frame.size = CGSizeMake(40, 200);
+    frame.origin = CGPointMake(0, 0);
     return frame;
 }
 
 - (CGRect)randomFrame1{
     CGRect frame = CGRectZero;
-    frame.size = CGSizeMake(100, 100);
-    frame.origin = CGPointMake(100, 100);
+    frame.size = CGSizeMake(500, 500);
+    frame.origin = CGPointMake(0, 0);
     return frame;
 }
 
 - (CGRect)randomFrame2{
     CGRect frame = CGRectZero;
     frame.size = CGSizeMake(500, 500);
-    frame.origin = CGPointMake(300, 300);
+    frame.origin.y  = (CGRectGetHeight([[self view] frame]) - frame.size.height)/2;
+    frame.origin.x  = (CGRectGetWidth([[self view] frame]) - frame.size.width)/2;
     return frame;
 }
 
@@ -161,50 +172,60 @@
     }];
 }
 
-- (MELDynamicCropView *)dynamicCrop{
-    if (!_dynamicCrop){
-        _dynamicCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
-        [_dynamicCrop setBackgroundColor:[UIColor redColor]];
-        [_dynamicCrop setCropColor:[UIColor greenColor]];
-        [_dynamicCrop setCropAlpha:0.5f];
-        [_dynamicCrop setDelegate:self];
-        [_dynamicCrop setAllowPinchOutsideOfRadius:YES];
-    }
-    return _dynamicCrop;
-}
+//- (MELDynamicCropView *)dynamicCrop{
+//    if (!_dynamicCrop){
+//        _dynamicCrop = [[MELDynamicCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
+//        [_dynamicCrop setBackgroundColor:[UIColor redColor]];
+//        [_dynamicCrop setCropColor:[UIColor greenColor]];
+//        [_dynamicCrop setCropAlpha:0.5f];
+//        [_dynamicCrop setDelegate:self];
+//        [_dynamicCrop setAllowPinchOutsideOfRadius:YES];
+//    }
+//    return _dynamicCrop;
+//}
+//
+//- (MELSuperCropView *)superCrop{
+//    if (!_superCrop){
+//        _superCrop = [[MELSuperCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
+//        [_superCrop setBackgroundColor:[UIColor redColor]];
+//        [_superCrop setCropColor:[UIColor greenColor]];
+//        [_superCrop setCropAlpha:0.5f];
+//        [_superCrop setDelegate:self];
+//        [_superCrop setAllowPinchOutsideOfRadius:YES];
+//    }
+//    return _superCrop;
+//}
+//
+//- (MELPortableCropView *)portableCrop{
+//    if (!_portableCrop){
+//        _portableCrop = [[MELPortableCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(420.0f, 320.0f) maximumRadius:900];
+//        [_portableCrop setBackgroundColor:[UIColor redColor]];
+//        [_portableCrop setCropColor:[UIColor greenColor]];
+//        [_portableCrop setCropAlpha:0.5f];
+//        [_portableCrop setDelegate:self];
+//    }
+//    return _portableCrop;
+//}
 
-- (MELSuperCropView *)superCrop{
-    if (!_superCrop){
-        _superCrop = [[MELSuperCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(320.0f, 420.0f) maximumRadius:900.0f];
-        [_superCrop setBackgroundColor:[UIColor redColor]];
-        [_superCrop setCropColor:[UIColor greenColor]];
-        [_superCrop setCropAlpha:0.5f];
-        [_superCrop setDelegate:self];
-        [_superCrop setAllowPinchOutsideOfRadius:YES];
-    }
-    return _superCrop;
-}
+//- (MELCropView *)melCropView{
+//    if (!_melCropView){
+//        _melCropView = [[MELCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(300, 300)];
+//        [_melCropView setBackgroundColor:[UIColor redColor]];
+//        [_melCropView setCropColor:[UIColor greenColor]];
+//        [_melCropView setCropAlpha:0.5f];
+//        [_melCropView setDelegate:self];
+//    }
+//    return _melCropView;
+//}
 
-- (MELPortableCropView *)portableCrop{
-    if (!_portableCrop){
-        _portableCrop = [[MELPortableCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(420.0f, 320.0f) maximumRadius:900];
-        [_portableCrop setBackgroundColor:[UIColor redColor]];
-        [_portableCrop setCropColor:[UIColor greenColor]];
-        [_portableCrop setCropAlpha:0.5f];
-        [_portableCrop setDelegate:self];
+- (MELCropView2 *)melCropView2{
+    if (!_melCropView2){
+        _melCropView2 = [[MELCropView2 alloc]initWithFrame:[self viewFrame] cropFrame:[self cropFrame]];
+        [_melCropView2 setBackgroundColor:[UIColor redColor]];
+        [_melCropView2 setCropColor:[UIColor greenColor]];
+        [_melCropView2 setCropAlpha:0.5f];
     }
-    return _portableCrop;
-}
-
-- (MELCropView *)melCropView{
-    if (!_melCropView){
-        _melCropView = [[MELCropView alloc]initWithFrame:[self cropFrame] cropSize:CGSizeMake(50.0f, 50)];
-        [_melCropView setBackgroundColor:[UIColor redColor]];
-        [_melCropView setCropColor:[UIColor greenColor]];
-        [_melCropView setCropAlpha:0.5f];
-        [_melCropView setDelegate:self];
-    }
-    return _melCropView;
+    return _melCropView2;
 }
 
 - (void)CameraViewController:(CameraViewController *)controller didFinishCroppingImage:(UIImage *)image transform:(CGAffineTransform)transform cropRect:(CGRect)cropRect{
@@ -221,8 +242,8 @@
             //[[self view] addSubview:[self superCrop]];
             //[[self portableCrop] setImage:_image];
             //[[self view] addSubview:[self portableCrop]];
-            [[self melCropView] setImage:_image];
-            [[self view] addSubview:[self melCropView]];
+            [[self melCropView2] setImage:_image];
+            [[self view] addSubview:[self melCropView2]];
             NSLog(@"total view width: %f", self.view.frame.size.width);
             
         }else{
@@ -242,8 +263,8 @@
     //[[self cropImageView] setImage:[[self superCrop] croppedImage]];
     SuperCropModalViewController *vc = [[SuperCropModalViewController alloc] init];
     [[vc view] setBackgroundColor:[UIColor whiteColor]];
-    [vc setImage:[[self melCropView] croppedImage]];
-    [vc setImageSize:[[self melCropView] cropSize]];
+    [vc setImage:[[self melCropView2] croppedImage]];
+    [vc setImageSize:[[self melCropView2] cropFrame].size];
     [self presentViewController:vc animated:YES completion:nil];
 }
 
