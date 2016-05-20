@@ -69,38 +69,6 @@ typedef enum : NSUInteger{
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame cropSize:(CGSize)cropSize{
-    self = [super initWithFrame:frame];
-    if (self){
-        
-        [self setClipsToBounds:YES];
-        
-        
-        if (frame.size.width > frame.size.height){
-            /* give preference to width */
-            if (cropSize.width > frame.size.width){
-                [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
-            }else if (cropSize.height > frame.size.height){
-                [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
-            }else{
-                NSLog(@"reached fell through both");
-                [self setCropSize:cropSize];
-            }
-        }else{
-            /* give preference to height */
-            if (cropSize.height > frame.size.height){
-                [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
-            }else if (cropSize.width > frame.size.width){
-                [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
-            }else{
-                NSLog(@"reached fell through both");
-                [self setCropSize:cropSize];
-            }
-        }
-    }
-    return self;
-}
-
 - (void)setUpGeometryForWidthWithFrame:(CGRect)frame cropSize:(CGSize)cropSize{
     NSLog(@"reached setup geo with width");
     CGFloat cropProportion = cropSize.height/cropSize.width;
