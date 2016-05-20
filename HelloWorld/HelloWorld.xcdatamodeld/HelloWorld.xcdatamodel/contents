@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15D21" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
     <entity name="Car" representedClassName="Car" syncable="YES">
         <attribute name="driver" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="person" optional="YES" attributeType="String" syncable="YES"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
                 <constraint value="driver"/>
@@ -9,6 +10,6 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Car" positionX="-63" positionY="-18" width="128" height="30"/>
+        <element name="Car" positionX="-63" positionY="-18" width="128" height="75"/>
     </elements>
 </model>

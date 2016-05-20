@@ -7,8 +7,9 @@
 //
 
 #import "ViewController.h"
-#import "AppDelegate.h"
+//#import "AppDelegate.h"
 #import "Car.h"
+#import "CoreDataManager.h"
 
 @interface ViewController ()
 @property (nonatomic, strong) UILabel *label;
@@ -19,8 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
   
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
+    NSManagedObjectContext *context = [self managedObjectContext];
     NSEntityDescription *addressEntity  = [NSEntityDescription entityForName:@"Car" inManagedObjectContext:context];
     Car *car0   = [[Car alloc] initWithEntity:addressEntity insertIntoManagedObjectContext:context];
     [car0 setDriver:@"mike"];
@@ -60,5 +60,8 @@
     return _label;
 }
 
+- (NSManagedObjectContext *)managedObjectContext {
+    return [[CoreDataManager sharedInstance] context];
+}
 
 @end

@@ -2,7 +2,7 @@
 //  Car+CoreDataProperties.h
 //  HelloWorld
 //
-//  Created by Mike Leveton on 3/14/16.
+//  Created by Mike Leveton on 5/20/16.
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 //  Choose "Create NSManagedObject Subclass…" from the Core Data editor menu
@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Car (CoreDataProperties)
 
 @property (nullable, nonatomic, retain) NSString *driver;
+@property (nullable, nonatomic, retain) NSString *person;
 
 @end
 
