@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1C4F322D1CEF5812003BBA60 /* CoreDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F322C1CEF5812003BBA60 /* CoreDataManager.m */; };
-		1C4F323E1CEF5FB0003BBA60 /* Car+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F323B1CEF5FB0003BBA60 /* Car+CoreDataProperties.m */; };
-		1C4F323F1CEF5FB0003BBA60 /* Car.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F323D1CEF5FB0003BBA60 /* Car.m */; };
+		1C4F32441CEF6DA1003BBA60 /* Car+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F32411CEF6DA1003BBA60 /* Car+CoreDataProperties.m */; };
+		1C4F32451CEF6DA1003BBA60 /* Car.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4F32431CEF6DA1003BBA60 /* Car.m */; };
 		1CB6BC201C97564600741ED9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC1F1C97564600741ED9 /* main.m */; };
 		1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC221C97564600741ED9 /* AppDelegate.m */; };
 		1CB6BC261C97564600741ED9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC251C97564600741ED9 /* ViewController.m */; };
@@ -40,10 +40,10 @@
 /* Begin PBXFileReference section */
 		1C4F322B1CEF5812003BBA60 /* CoreDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataManager.h; sourceTree = "<group>"; };
 		1C4F322C1CEF5812003BBA60 /* CoreDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataManager.m; sourceTree = "<group>"; };
-		1C4F323A1CEF5FB0003BBA60 /* Car+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Car+CoreDataProperties.h"; sourceTree = "<group>"; };
-		1C4F323B1CEF5FB0003BBA60 /* Car+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Car+CoreDataProperties.m"; sourceTree = "<group>"; };
-		1C4F323C1CEF5FB0003BBA60 /* Car.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Car.h; sourceTree = "<group>"; };
-		1C4F323D1CEF5FB0003BBA60 /* Car.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Car.m; sourceTree = "<group>"; };
+		1C4F32401CEF6DA1003BBA60 /* Car+CoreDataProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Car+CoreDataProperties.h"; sourceTree = "<group>"; };
+		1C4F32411CEF6DA1003BBA60 /* Car+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Car+CoreDataProperties.m"; sourceTree = "<group>"; };
+		1C4F32421CEF6DA1003BBA60 /* Car.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Car.h; sourceTree = "<group>"; };
+		1C4F32431CEF6DA1003BBA60 /* Car.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Car.m; sourceTree = "<group>"; };
 		1CB6BC1B1C97564600741ED9 /* HelloWorld.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloWorld.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1CB6BC1F1C97564600741ED9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		1CB6BC211C97564600741ED9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -110,10 +110,10 @@
 		1CB6BC1D1C97564600741ED9 /* HelloWorld */ = {
 			isa = PBXGroup;
 			children = (
-				1C4F323A1CEF5FB0003BBA60 /* Car+CoreDataProperties.h */,
-				1C4F323B1CEF5FB0003BBA60 /* Car+CoreDataProperties.m */,
-				1C4F323C1CEF5FB0003BBA60 /* Car.h */,
-				1C4F323D1CEF5FB0003BBA60 /* Car.m */,
+				1C4F32401CEF6DA1003BBA60 /* Car+CoreDataProperties.h */,
+				1C4F32411CEF6DA1003BBA60 /* Car+CoreDataProperties.m */,
+				1C4F32421CEF6DA1003BBA60 /* Car.h */,
+				1C4F32431CEF6DA1003BBA60 /* Car.m */,
 				1CB6BC211C97564600741ED9 /* AppDelegate.h */,
 				1CB6BC221C97564600741ED9 /* AppDelegate.m */,
 				1CB6BC241C97564600741ED9 /* ViewController.h */,
@@ -284,11 +284,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C4F323E1CEF5FB0003BBA60 /* Car+CoreDataProperties.m in Sources */,
+				1C4F32441CEF6DA1003BBA60 /* Car+CoreDataProperties.m in Sources */,
 				1C4F322D1CEF5812003BBA60 /* CoreDataManager.m in Sources */,
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
 				1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */,
-				1C4F323F1CEF5FB0003BBA60 /* Car.m in Sources */,
+				1C4F32451CEF6DA1003BBA60 /* Car.m in Sources */,
 				1CB6BC201C97564600741ED9 /* main.m in Sources */,
 				1CB6BC2C1C97564600741ED9 /* HelloWorld.xcdatamodeld in Sources */,
 			);

@@ -15,5 +15,6 @@
 
 @dynamic driver;
 @dynamic person;
+@dynamic passenger;
 
 @end

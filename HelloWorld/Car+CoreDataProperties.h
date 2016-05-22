@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, retain) NSString *driver;
 @property (nullable, nonatomic, retain) NSString *person;
+@property (nullable, nonatomic, retain) NSString *passenger;
 
 @end
 

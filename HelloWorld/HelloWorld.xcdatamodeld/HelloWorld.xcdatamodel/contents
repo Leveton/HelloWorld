@@ -2,6 +2,7 @@
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Automatic">
     <entity name="Car" representedClassName="Car" syncable="YES">
         <attribute name="driver" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="passenger" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="person" optional="YES" attributeType="String" syncable="YES"/>
         <uniquenessConstraints>
             <uniquenessConstraint>
@@ -10,6 +11,6 @@
         </uniquenessConstraints>
     </entity>
     <elements>
-        <element name="Car" positionX="-63" positionY="-18" width="128" height="75"/>
+        <element name="Car" positionX="-63" positionY="-18" width="128" height="90"/>
     </elements>
 </model>
