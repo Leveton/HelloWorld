@@ -239,6 +239,19 @@ typedef enum : NSUInteger{
         newHeight              = newWidth * proportion;
     }
     
+    /* if crop size is wider or taller than the image, just make the proportional to the longer side of the view's frame */
+    if (_cropSize.height > newHeight){
+        newHeight              = self.frame.size.height;
+        proportion             = image.size.width/image.size.height;
+        newWidth               = newHeight * proportion;
+    }
+    
+    if (_cropSize.width > newWidth){
+        newWidth              = self.frame.size.width;
+        proportion            = image.size.height/image.size.width;
+        newHeight             = newWidth * proportion;
+    }
+    
     CGRect  dynamicImageViewFrame = [[self imageToCrop] frame];
     CGSize size = CGSizeMake(newWidth, newHeight);
     dynamicImageViewFrame.size  = size;
