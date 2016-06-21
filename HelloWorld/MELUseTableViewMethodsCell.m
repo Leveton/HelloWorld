@@ -1,55 +1,52 @@
 //
-//  MELExpandingTextCell.m
+//  MELUseTableViewMethodsCell.m
 //  HelloWorld
 //
-//  Created by Mike Leveton on 4/8/16.
+//  Created by Mike Leveton on 6/13/16.
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 
+#import "MELUseTableViewMethodsCell.h"
 
-//a note from dynamic
-#import "MELExpandingTextCell.h"
+#define kDynamicCellTextPadding                 (12.0f)
 
-@interface MELExpandingTextCell()<UITextViewDelegate>
-@property (nonatomic, strong) NSDictionary                  *notesViewAttribs;
+@interface MELUseTableViewMethodsCell()<UITextViewDelegate>
+//@property (nonatomic, strong) NSDictionary                  *notesViewAttribs;
 @property (nonatomic, assign) CGFloat                       lineHeightForTextView;
 @property (nonatomic, assign) CGFloat                       textHeightForTextView;
 @property (nonatomic, assign) NSInteger                     numberOfLinesForTextView;
 @property (nonatomic, assign) NSInteger                     maxNumberOfLinesForTextView;
-
-@property (nonatomic, strong) UIButton                     *button;
 @end
 
-@implementation MELExpandingTextCell
+@implementation MELUseTableViewMethodsCell
 
 - (id)init{
     self = [super init];
     
     if (self){
-        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
-        UIFont *font = [UIFont fontWithName:@"ArialMT" size:15.0f];
-        _notesViewAttribs = [NSDictionary dictionaryWithObjectsAndKeys:
-                             font, NSFontAttributeName,
-                             nil];
         
         /*allow approx 100kb per note message */
         _maxNumberOfLinesForTextView = 3000;
-        
-        
-        
-        _button = [UIButton buttonWithType:UIButtonTypeCustom];
-        _button.frame = CGRectMake(0, 0, 100, 100);
-        [_button.titleLabel setTextAlignment:NSTextAlignmentLeft];
-        [_button setBackgroundColor:[UIColor blueColor]];
-        [_button addTarget:self action:@selector(toggleFilter:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     return self;
 }
 
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
 - (void)layoutSubviews{
     [super layoutSubviews];
-    
+    NSLog(@"layout subviews cell called");
     
     CGRect textViewFrame          = [[self textView] frame];
     textViewFrame.origin.x        = kDynamicCellTextPadding;
@@ -57,40 +54,42 @@
     
     if ([[self delegate] respondsToSelector:@selector(getTextViewHeight)]){
         CGFloat currentTextHeight = [[self delegate] getTextViewHeight] + kDynamicCellTextPadding;
-        CGFloat minimumTextHeight = 70.0f - (kDynamicCellTextPadding * 2);
+        CGFloat minimumTextHeight = kColdStartCellHeight - (kDynamicCellTextPadding * 2);
         textViewFrame.size.height = (currentTextHeight > minimumTextHeight) ? currentTextHeight : minimumTextHeight;
     }
     
-    textViewFrame.size.width      = [UIScreen mainScreen].bounds.size.width - (kDynamicCellTextPadding * 2);
+    textViewFrame.size.width      = CGRectGetWidth([self frame]) - (kDynamicCellTextPadding * 2);
     [[self textView] setFrame:textViewFrame];
     
-    CGRect placeholderTextFrame = [[self placeholder] frame];
+    CGRect placeholderTextFrame      = [[self placeholder] frame];
     placeholderTextFrame.origin.x    = textViewFrame.origin.x;
     placeholderTextFrame.origin.y    = textViewFrame.origin.y;
     placeholderTextFrame.size.width  = textViewFrame.size.width;
     placeholderTextFrame.size.height = _lineHeightForTextView ? _lineHeightForTextView : 22.0f;
     [[self placeholder] setFrame:placeholderTextFrame];
-    
-    NSLog(@"editing: %ld", (long)self.isEditing);
-    NSLog(@"enabled: %ld", (long)self.userInteractionEnabled);
-    NSLog(@"enabled is: %ld", (long)self.isUserInteractionEnabled);
-    
-    //[self addSubview:_button];
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
 }
 
 #pragma mark - getters
+
+-(UILabel *)placeholder{
+    if (!_placeholder) {
+        _placeholder = [[UILabel alloc] initWithFrame:CGRectZero];
+        [_placeholder setFont:[UIFont fontWithName:@"Avenir-Roman" size:16.0f]];
+        [_placeholder setTextColor:[UIColor grayColor]];
+        [_placeholder.layer setZPosition:2.0f];
+        [_placeholder setBackgroundColor:[UIColor redColor]];
+        [self addSubview:_placeholder];
+    }
+    return _placeholder;
+}
 
 - (UITextView *)textView{
     if (!_textView){
         _textView = [[UITextView alloc]initWithFrame:CGRectZero];
         [_textView setDelegate:self];
-        UIFont *font = [UIFont fontWithName:@"ArialMT" size:15.0f];
-        [_textView setFont:font];
-        [_textView setTextColor:[UIColor darkGrayColor]];
+        _textView.bounces = NO;
+        [_textView setFont:[UIFont fontWithName:@"Avenir-Roman" size:16.0f]];
+        [_textView setTextColor:[UIColor blackColor]];
         [_textView setBackgroundColor:[UIColor blueColor]];
         [self addSubview:_textView];
     }
@@ -98,22 +97,15 @@
     return _textView;
 }
 
--(UILabel *)placeholder{
-    if (!_placeholder) {
-        _placeholder = [[UILabel alloc] initWithFrame:CGRectZero];
-        UIFont *font = [UIFont fontWithName:@"ArialMT" size:15.0f];
-        [_placeholder setFont:font];
-        [_placeholder setTextColor:[UIColor darkGrayColor]];
-        [_placeholder.layer setZPosition:2.0f];
-        //[_placeholder setBackgroundColor:[UIColor redColor] ];
-        [self addSubview:_placeholder];
-    }
-    return _placeholder;
-}
+//- (NSDictionary *)notesViewAttribs{
+//    if (!_notesViewAttribs){
+//        _notesViewAttribs = [NSDictionary dictionaryWithObjectsAndKeys:
+//                             [UIFont fontWithName:@"Avenir-Roman" size:16.0f], NSFontAttributeName,
+//                             nil];
+//    }
+//    return _notesViewAttribs;
+//}
 
--(void)setPlaceholderText:(NSString *)placeholder{
-    [[self placeholder] setText:placeholder];
-}
 
 #pragma mark - UITextViewDelegate
 
@@ -131,7 +123,6 @@
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView{
-    
     if ([[self delegate] respondsToSelector:@selector(adjustDynamicCellIsFirstResponder:)]){
         [[self delegate] adjustDynamicCellIsFirstResponder:NO];
     }
@@ -147,6 +138,7 @@
     return YES;
 }
 
+
 - (void)textViewDidChange:(UITextView *)textView{
     
     [[self placeholder] setHidden:[textView hasText]];
@@ -155,17 +147,15 @@
         [[self delegate] didUpdateText:textView.text];
     }
     
-    NSString *text = textView.text;
+    //NSString *text = textView.text;
     
-    CGFloat textHeight = [text boundingRectWithSize:CGSizeMake(CGRectGetWidth(self.textView.frame), CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:_notesViewAttribs context:nil].size.height;
+    //CGFloat textHeight = [text boundingRectWithSize:CGSizeMake(CGRectGetWidth([[self textView]bounds]), CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading) attributes:[self notesViewAttribs] context:nil].size.height;
     
-    /**
-     
-     _lineHeightForTextView is the constant height for each line of text
-     _textHeightForTextView is the height of the text area based on boundingRectWithSize
-     _maxNumberOfLinesForTextView is the maximum allowed number of lines that the user can create
-     
-     **/
+    
+    CGFloat width      = CGRectGetWidth([self frame]) - (kDynamicCellTextPadding * 2);
+    CGSize size        = [[self textView] sizeThatFits:CGSizeMake(width, CGFLOAT_MAX)];
+    CGFloat textHeight = size.height;
+    NSLog(@"text view did change %f %f", textHeight, _textHeightForTextView);
     
     /* if line height not set */
     if (_lineHeightForTextView < 1){
@@ -198,19 +188,6 @@
         }
     }
     
-    text = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    text = [text stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    
-    /* if text is blank, text text field to receive and empty string */
-    if ([text isEqualToString:@""]){
-        [[self textView] setText:@""];
-    }
+
 }
-
-
-
--(void)toggleFilter:(id)sender{
-    NSLog(@"klsadjfa");
-}
-
 @end

@@ -19,10 +19,14 @@
 #import "AppDelegate.h"
 #import "MELExpandingTextCell.h"
 #import "MELTextViewTableViewCell.h"
+#import "MELUseTableViewMethodsCell.h"
 
-@interface ViewController ()<UITableViewDelegate, UITableViewDataSource, MELExpandingTextCellDelegate>
+@interface ViewController ()<UITableViewDelegate, UITableViewDataSource, LWDynamicTableViewCellDelegate>
 @property (nonatomic, strong) UILabel     *label;
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) NSString    *notesString;
+@property (nonatomic, assign) CGFloat     textHeightForNotesView;
+@property (nonatomic, assign) CGFloat     notesOffset;
 @end
 
 @implementation ViewController
@@ -81,8 +85,7 @@
     
     if (indexPath.row == 3){
         MELExpandingTextCell *cell = [MELExpandingTextCell new];
-        [cell setDelegate:self];
-        [[cell textView] setText:@"lorem ipsum"];
+        //[cell setDelegate:self];
         [[cell placeholder] setText:@"hi mike"];
         [[cell placeholder] setHidden:YES];
         [cell setEditing:YES];
@@ -90,9 +93,9 @@
     }
     
     if (indexPath.row == 5){
-        MELExpandingTextCell *cell = [MELExpandingTextCell new];
+        MELUseTableViewMethodsCell *cell = [MELUseTableViewMethodsCell new];
         [cell setDelegate:self];
-        [[cell textView] setText:@"lorem ipsum 7"];
+        [[cell textView] setText:_notesString];
         [[cell placeholder] setText:@"hi mike 7"];
         [[cell placeholder] setHidden:YES];
         [cell setEditing:YES];
@@ -107,10 +110,11 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    if (indexPath.row == 3){
-        return 150.0f;
+    if (indexPath.row == 5){
+        NSLog(@"notes height > cold start: %ld", (long)(self.textHeightForNotesView > kColdStartCellHeight));
+        return (self.textHeightForNotesView > kColdStartCellHeight) ? self.textHeightForNotesView : kColdStartCellHeight;
     }
-    return 44.0f;
+    return kColdStartCellHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -125,19 +129,33 @@
 #pragma mark - MELExpandingTextCellDelegate
 
 - (void)setUpheightForTextViewWithHeight:(CGFloat)height{
-    
+    NSLog(@"setUpheightForTextViewWithHeight called with height %f", height);
+    _textHeightForNotesView = height;
 }
+
 - (CGFloat)getTextViewHeight{
-    return 100.0f;
+    NSLog(@"getTextViewHeight called with height %f", _textHeightForNotesView);
+    return _textHeightForNotesView;
 }
 - (void)adjustScrollViewWithHeight:(CGFloat)height{
+    NSLog(@"adjustScrollViewWithHeight called");
+    self.notesOffset = self.notesOffset + height;
     
+//    if ([self tableViewShouldScroll]){
+//        [[self tableView] setContentOffset:CGPointMake(0, self.notesOffset) animated:YES];
+//    }
+    //NSIndexPath *indexPath           = [NSIndexPath indexPathForRow:5 inSection:0];
+    [[self tableView] beginUpdates];
+    //[[self tableView] reloadRowsAtIndexPaths:@[indexPath]  withRowAnimation:UITableViewRowAnimationAutomatic];
+    [[self tableView] endUpdates];
+    //MELUseTableViewMethodsCell *cell = [[self tableView] cellForRowAtIndexPath:indexPath];
+    //[cell layoutSubviews];
 }
 - (void)didUpdateText:(NSString *)text{
-    
+    _notesString = text;
 }
 - (void)adjustDynamicCellIsFirstResponder:(BOOL)isFirstResponder{
-    
+    /* for keyboard will show notif */
 }
 
 @end
