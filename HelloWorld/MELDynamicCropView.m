@@ -10,13 +10,6 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-typedef enum : NSUInteger{
-    kOrientationCenter,
-    kOrientationTopLeft,
-    kOrientationTopRight,
-    kOrientationBottomLeft,
-    kOrientationBottomRight,
-}ImageFrameOrientation;
 
 @interface MELDynamicCropView()
 @property (nonatomic, strong) UIImageView               *imageToCrop;
@@ -30,7 +23,6 @@ typedef enum : NSUInteger{
 @property (nonatomic, assign) CGFloat                   minimumImageXOffset;
 @property (nonatomic, assign) CGFloat                   minimumImageYOffset;
 @property (nonatomic, assign) CGAffineTransform         originalTransform;
-@property (nonatomic, assign) ImageFrameOrientation     currentOrientation;
 
 @end
 
@@ -42,55 +34,11 @@ typedef enum : NSUInteger{
         [self setClipsToBounds:YES];
         CGSize cropSize = cropFrame.size;
         
-        if (frame.size.width > frame.size.height){
-            /* give preference to width */
-            if (cropSize.width > frame.size.width){
-                [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
-            }else if (cropSize.height > frame.size.height){
-                [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
-            }else{
-                [self setCropSize:cropSize];
-            }
-        }else{
-            /* give preference to height */
-            if (cropSize.height > frame.size.height){
-                [self setUpGeometryForHeightWithFrame:frame cropSize:cropSize];
-            }else if (cropSize.width > frame.size.width){
-                [self setUpGeometryForWidthWithFrame:frame cropSize:cropSize];
-            }else{
-                [self setCropSize:cropSize];
-            }
-        }
+        [self setCropSize:cropSize];
     }
     
     [self setCropFrame:cropFrame];
     return self;
-}
-
-- (void)setUpGeometryForWidthWithFrame:(CGRect)frame cropSize:(CGSize)cropSize{
-    CGFloat cropProportion     = cropSize.height/cropSize.width;
-    CGFloat adjustedWidth      = frame.size.width;
-    CGFloat adjustedHeight     = adjustedWidth * cropProportion;
-    CGFloat frameProportion    = frame.size.height/frame.size.width;
-    frame.size.width           = cropSize.width;
-    frame.size.height          = frame.size.width * frameProportion;
-    cropSize = CGSizeMake(adjustedWidth, adjustedHeight);
-    
-    [self setFrame:frame];
-    [self setCropSize:cropSize];
-}
-
-- (void)setUpGeometryForHeightWithFrame:(CGRect)frame cropSize:(CGSize)cropSize{
-    CGFloat cropProportion     = cropSize.width/cropSize.height;
-    CGFloat adjustedHeight     = frame.size.height;
-    CGFloat adjustedWidth      = adjustedHeight * cropProportion;
-    CGFloat frameProportion    = frame.size.width/frame.size.height;
-    frame.size.height          = cropSize.height;
-    frame.size.width           = frame.size.height * frameProportion;
-    cropSize = CGSizeMake(adjustedWidth, adjustedHeight);
-    
-    [self setFrame:frame];
-    [self setCropSize:cropSize];
 }
 
 #pragma mark - getters
@@ -185,6 +133,11 @@ typedef enum : NSUInteger{
 
 - (void)setCropFrame:(CGRect)cropFrame{
     _cropFrame = cropFrame;
+    
+    CGSize cropSize = cropFrame.size;
+    
+    [self setCropSize:cropSize];
+    
     [[self cropView] setFrame:_cropFrame];
     _cropViewXOffset = cropFrame.origin.x;
     _cropViewYOffset = cropFrame.origin.y;
@@ -194,7 +147,7 @@ typedef enum : NSUInteger{
     _image = image;
     _copiedImage = [_image copy];
     
-    [[self imageToCrop] setFrame:[self frameForGestureViewWithImage:_image]];
+    [[self imageToCrop] setFrame:self.frame];
     
     _originalTransform = _imageToCrop.transform;
     
@@ -215,69 +168,6 @@ typedef enum : NSUInteger{
 }
 
 #pragma mark - selectors
-
-- (CGRect)frameForGestureViewWithImage:(UIImage *)image{
-    
-    CGFloat proportion;
-    CGFloat newHeight;
-    CGFloat newWidth;
-    
-    if (image.size.width >= image.size.height){
-        /* make the image height in between the crop view height and the total height */
-        proportion            = image.size.width/image.size.height;
-        newHeight             = (_cropSize.height + self.frame.size.height)/2;
-        newWidth              = newHeight * proportion;
-        
-    }else{
-        /* make the image width in between the crop view width and the total width */
-        proportion             = image.size.height/image.size.width;
-        newWidth               = (_cropSize.width + self.frame.size.width)/2;
-        newHeight              = newWidth * proportion;
-    }
-    
-    /* if crop size is wider or taller than the image, just make the proportional to the longer side of the view's frame */
-    if (_cropSize.height > newHeight){
-        newHeight              = self.frame.size.height;
-        proportion             = image.size.width/image.size.height;
-        newWidth               = newHeight * proportion;
-    }
-    
-    if (_cropSize.width > newWidth){
-        newWidth              = self.frame.size.width;
-        proportion            = image.size.height/image.size.width;
-        newHeight             = newWidth * proportion;
-    }
-    
-    CGRect  dynamicImageViewFrame = [[self imageToCrop] frame];
-    CGSize size = CGSizeMake(newWidth, newHeight);
-    dynamicImageViewFrame.size  = size;
-    CGPoint orientation;
-    
-    switch (_currentOrientation) {
-        case kOrientationCenter:
-            orientation = [self orientationCenteredWithSize:size];
-            break;
-        case kOrientationTopLeft:
-            orientation = [self orientationTopLeftWithSize:size];
-            break;
-        case kOrientationTopRight:
-            orientation = [self orientationTopRightWithSize:size];
-            break;
-        case kOrientationBottomLeft:
-            orientation = [self orientationBottomLeftWithSize:size];
-            break;
-        case kOrientationBottomRight:
-            orientation = [self orientationBottomRightWithSize:size];
-            break;
-        default:
-            orientation = [self orientationCenteredWithSize:size];
-            break;
-    }
-    
-    dynamicImageViewFrame.origin      = orientation;
-    
-    return dynamicImageViewFrame;
-}
 
 - (void)didPan:(UIPanGestureRecognizer *)pan{
     if (pan.state == UIGestureRecognizerStateChanged){
@@ -307,6 +197,13 @@ typedef enum : NSUInteger{
 - (void)didPinch:(UIPinchGestureRecognizer *)recognizer{
     recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
     recognizer.scale = 1;
+    
+    NSLog(@"recognizer.scale: %f %f %f", _imageToCrop.bounds.size.width, _imageToCrop.frame.origin.x, _imageToCrop.frame.origin.y);
+    if (_imageToCrop.frame.size.width < 270.0f && [[self delegate] respondsToSelector:@selector(imageWasPinchedWithFrame:)]){
+        
+        [[self delegate] imageWasPinchedWithFrame:_imageToCrop.frame];
+        return;
+    }
     
     if ([recognizer state] == UIGestureRecognizerStateEnded){
         
@@ -352,24 +249,6 @@ typedef enum : NSUInteger{
                 [distanceArray addObject:bottomRight];
             }
             
-            NSArray *sortedDistances      = [distanceArray sortedArrayUsingSelector:@selector(compare:)];
-            
-            if (sortedDistances.count > 0){
-                NSNumber *closestDistance = [sortedDistances objectAtIndex:0];
-                if ([closestDistance isEqual:topLeft]){
-                    _currentOrientation   = kOrientationTopLeft;
-                }else if ([closestDistance isEqual:topRight]){
-                    _currentOrientation   = kOrientationTopRight;
-                }else if ([closestDistance isEqual:bottomLeft]){
-                    _currentOrientation   = kOrientationBottomLeft;
-                }else if ([closestDistance isEqual:bottomRight]){
-                    _currentOrientation   = kOrientationBottomRight;
-                }else{
-                    _currentOrientation   = kOrientationCenter;
-                }
-            }else{
-                _currentOrientation       = kOrientationCenter;
-            }
             
             [UIView animateWithDuration:0.2f
                                   delay:0.0f
@@ -388,50 +267,5 @@ typedef enum : NSUInteger{
         }
     }
 }
-
-#pragma mark - image methods
-
-- (UIImage *)croppedImage{
-    return [self croppedImageWithImage:_image rect:[self currentCropRect]];
-}
-
-- (CGRect)currentCropRect{
-    /* this takes _cropView, makes a copy of it, and puts the copy in _imageToCrop's coordinate space */
-    CGRect cropRect = [_cropView convertRect:_cropView.bounds toView:_imageToCrop];
-    
-    /*AVMakeRectWithAspectRatioInsideRect changes the rect you give it to another rect with the aspect ratio that you want */
-    CGFloat ratio   = CGRectGetWidth(AVMakeRectWithAspectRatioInsideRect(_image.size, _imageToCrop.bounds)) / _image.size.width;
-    
-    CGRect rect     = CGRectMake(cropRect.origin.x/ratio, cropRect.origin.y/ratio, cropRect.size.width/ratio, cropRect.size.height/ratio);
-    return rect;
-}
-
-- (UIImage *)croppedImageWithImage:(UIImage *)image rect:(CGRect)rect{
-    
-    CGFloat scale       = image.scale;
-    
-    /* To construct a new scaling matrix from x and y values that specify how much to stretch or shrink coordinates. */
-    CGAffineTransform t = CGAffineTransformMakeScale(scale, scale);
-    
-    /* CGRectApplyAffineTransform returns the smallest rectangle that contains the transformed corner points of the rectangle passed to it */
-    CGRect cropRect     = CGRectApplyAffineTransform(rect, t);
-    
-    CGImageRef croppedImage = CGImageCreateWithImageInRect(image.CGImage, cropRect);
-    //image = [self removeRotationForImage:image];
-    UIImage *newImage       = [UIImage imageWithCGImage:croppedImage scale:image.scale orientation:image.imageOrientation];
-    CGImageRelease(croppedImage);
-    
-    return newImage;
-}
-
-//- (UIImage *)removeRotationForImage:(UIImage *)image {
-//    if (image.imageOrientation == UIImageOrientationUp) return image;
-//    
-//    UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
-//    [image drawInRect:(CGRect){0, 0, image.size}];
-//    UIImage *normalizedImage =  UIGraphicsGetImageFromCurrentImageContext();
-//    UIGraphicsEndImageContext();
-//    return normalizedImage;
-//}
 
 @end

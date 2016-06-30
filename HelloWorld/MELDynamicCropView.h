@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol LWDynamicImageViewDelegate;
+
 @interface MELDynamicCropView : UIView
+@property (nonatomic, assign) id <LWDynamicImageViewDelegate> delegate;
 @property (nonatomic, strong, readonly) UIImage             *image;
-@property (nonatomic, strong, readonly) UIImage             *croppedImage;
 @property (nonatomic, strong, readonly) UIColor             *cropColor;
 @property (nonatomic, assign, readonly) CGRect              cropFrame;
 @property (nonatomic, assign, readonly) CGFloat             cropAlpha;
@@ -21,5 +23,12 @@
 - (void)setCropColor:(UIColor *)cropColor;
 - (void)setCropAlpha:(CGFloat)cropAlpha;
 - (void)setCropFrame:(CGRect)cropFrame;
+
+@end
+
+@protocol LWDynamicImageViewDelegate <NSObject>
+
+@optional
+- (void)imageWasPinchedWithFrame:(CGRect)frame;
 
 @end

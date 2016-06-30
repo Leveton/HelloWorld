@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ViewController : UIViewController
-
-
+@property (nonatomic, assign, readonly) CGSize               cellSize;
+- (void)setCellSize:(CGSize)cellSize;
 @end
 
