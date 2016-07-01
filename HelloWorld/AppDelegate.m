@@ -8,9 +8,11 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "DynamicImageViewController.h"
 
 @interface AppDelegate ()
 @property (nonatomic, strong) ViewController *viewController;
+@property (nonatomic, strong) DynamicImageViewController *dynamicVC;
 @end
 
 @implementation AppDelegate
@@ -19,7 +21,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [[self window] setRootViewController:[self viewController]];
+    [[self window] setRootViewController:[self dynamicVC]];
     [[self window] makeKeyAndVisible];
     
     return YES;
@@ -136,6 +138,13 @@
         [[_viewController view] setBackgroundColor:[UIColor whiteColor]];
     }
     return _viewController;
+}
+- (DynamicImageViewController *)dynamicVC{
+    if (!_dynamicVC){
+        _dynamicVC = [[DynamicImageViewController alloc] init];
+        [[_dynamicVC view] setBackgroundColor:[UIColor whiteColor]];
+    }
+    return _dynamicVC;
 }
 
 @end
