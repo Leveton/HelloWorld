@@ -19,6 +19,7 @@
 		1CB6BC471C97564600741ED9 /* HelloWorldUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC461C97564600741ED9 /* HelloWorldUITests.m */; };
 		1CB6BC581C97583000741ED9 /* Car+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC551C97583000741ED9 /* Car+CoreDataProperties.m */; };
 		1CB6BC591C97583000741ED9 /* Car.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC571C97583000741ED9 /* Car.m */; };
+		1CFD72FB1D2B5FDD0035DB5F /* LWDynamicImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CFD72FA1D2B5FDD0035DB5F /* LWDynamicImageView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,8 @@
 		1CB6BC551C97583000741ED9 /* Car+CoreDataProperties.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Car+CoreDataProperties.m"; sourceTree = "<group>"; };
 		1CB6BC561C97583000741ED9 /* Car.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Car.h; sourceTree = "<group>"; };
 		1CB6BC571C97583000741ED9 /* Car.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Car.m; sourceTree = "<group>"; };
+		1CFD72F91D2B5FDD0035DB5F /* LWDynamicImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LWDynamicImageView.h; sourceTree = "<group>"; };
+		1CFD72FA1D2B5FDD0035DB5F /* LWDynamicImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LWDynamicImageView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +124,8 @@
 				1C95C23F1D271F66001AABD2 /* DynamicImageViewController.m */,
 				1C2CB3871D25B0BD00027599 /* MELDynamicCropView.h */,
 				1C2CB3881D25B0BD00027599 /* MELDynamicCropView.m */,
+				1CFD72F91D2B5FDD0035DB5F /* LWDynamicImageView.h */,
+				1CFD72FA1D2B5FDD0035DB5F /* LWDynamicImageView.m */,
 				1CB6BC2D1C97564600741ED9 /* Assets.xcassets */,
 				1CB6BC2F1C97564600741ED9 /* LaunchScreen.storyboard */,
 				1CB6BC321C97564600741ED9 /* Info.plist */,
@@ -293,6 +298,7 @@
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
 				1CB6BC581C97583000741ED9 /* Car+CoreDataProperties.m in Sources */,
 				1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */,
+				1CFD72FB1D2B5FDD0035DB5F /* LWDynamicImageView.m in Sources */,
 				1CB6BC201C97564600741ED9 /* main.m in Sources */,
 				1C2CB3891D25B0BD00027599 /* MELDynamicCropView.m in Sources */,
 				1C95C2401D271F66001AABD2 /* DynamicImageViewController.m in Sources */,
