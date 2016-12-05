@@ -12,6 +12,9 @@
 
 @interface ViewController ()
 @property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UIButton *button0;
+@property (nonatomic, strong) UIButton *button1;
+@property (nonatomic, strong) UIButton *button2;
 @end
 
 @implementation ViewController
@@ -31,8 +34,7 @@
     }else{
         NSLog(@"save 0 ok");
     }
-    //from mleveton
-    //lev
+    
 }
 
 - (void)viewWillLayoutSubviews{
@@ -43,6 +45,20 @@
     labelFrame.size.height = 60.0f;
     labelFrame.size.width = CGRectGetWidth([[self view] frame]);
     [[self label] setFrame:labelFrame];
+    
+    CGRect button0frame = [[self button0] frame];
+    button0frame.size.height = 100.0f;
+    button0frame.size.width = 100.0f;
+    button0frame.origin.x = (CGRectGetWidth([[self view] frame]) - button0frame.size.width)/2;
+    button0frame.origin.y = (CGRectGetHeight([[self view] frame]) - button0frame.size.height)/2;
+    [[self button0] setFrame:button0frame];
+    
+    CGRect button1frame = [[self button1] frame];
+    button1frame.size.height = 100.0f;
+    button1frame.size.width = 100.0f;
+    button1frame.origin.x = (CGRectGetWidth([[self view] frame]) - button1frame.size.width)/2;
+    button1frame.origin.y = CGRectGetMaxY(button0frame) + 10.0f;
+    [[self button1] setFrame:button1frame];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,5 +77,42 @@
     return _label;
 }
 
+- (UIButton *)button0{
+    if (!_button0){
+        _button0 = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_button0 addTarget:self action:@selector(didTapZero:) forControlEvents:UIControlEventTouchUpInside];
+        [_button0 setTitle:NSLocalizedString(@"BUTTON 0", nil) forState:UIControlStateNormal];
+        [[self view] addSubview:_button0];
+    }
+    return _button0;
+}
+
+- (UIButton *)button1{
+    if (!_button1){
+        _button1 = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_button1 addTarget:self action:@selector(didTapOne:) forControlEvents:UIControlEventTouchUpInside];
+        [_button1 setTitle:NSLocalizedString(@"Button 1", nil) forState:UIControlStateNormal];
+        [[self view] addSubview:_button1];
+    }
+    return _button1;
+}
+
+
+- (void)didTapZero:(id)sender{
+    [sender setTag:99];
+    self.button2 = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.button2 addTarget:self action:@selector(didTapOne:) forControlEvents:UIControlEventTouchUpInside];
+    [self.button2 setTitle:NSLocalizedString(@"BUTTON 2", nil) forState:UIControlStateNormal];
+    [self.button2 sizeToFit];
+    CGRect frame = self.button2.frame;
+    frame.origin.y = 50.0f;
+    [self.button2 setFrame:frame];
+    [[self view] addSubview:self.button2];
+    
+}
+
+- (void)didTapOne:(id)sender{
+    [sender setTag:100];
+}
 
 @end
