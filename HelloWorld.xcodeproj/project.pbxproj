@@ -227,6 +227,7 @@
 					};
 					1CB6BC411C97564600741ED9 = {
 						CreatedOnToolsVersion = 7.2.1;
+						LastSwiftMigration = 0810;
 						TestTargetID = 1CB6BC1A1C97564600741ED9;
 					};
 				};
@@ -471,6 +472,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mleveton.HelloWorldUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = HelloWorld;
 				USES_XCTRUNNER = YES;
 			};
@@ -484,6 +486,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.mleveton.HelloWorldUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_TARGET_NAME = HelloWorld;
 				USES_XCTRUNNER = YES;
 			};

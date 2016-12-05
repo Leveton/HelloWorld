@@ -46,10 +46,10 @@ class HelloWorldUITests: XCTestCase {
         }
         button2.tap()
         XCTAssertEqual(app.buttons.count, 3)
-        let labels = app.descendantsMatchingType(.StaticText)
-        let labelsQuery = labels.containingType(.StaticText, identifier: "CD")
+        let labels = app.descendants(matching: .staticText)
+        let labelsQuery = labels.containing(.staticText, identifier: "CD")
         let element = labels["CD"]
-        let element1 = labels.elementAtIndex(0)
+        let element1 = labels.element(at: 0)
         XCTAssert(element.exists, "OK")
         XCTAssert(element1.exists)
         XCTAssertEqual(labelsQuery.count, 1)
