@@ -6,16 +6,7 @@
 //  Copyright © 2016 Mike Leveton. All rights reserved.
 //
 
-/**
- LOREM IPSUM
- LOREM IPSUM
- LOREM IPSUM
- LOREM IPSUM
- LOREM IPSUM
- LOREM IPSUM
- LOREM IPSUM
- LOREM IPSUM
- */
+
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
