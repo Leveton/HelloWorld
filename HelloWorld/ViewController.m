@@ -15,26 +15,112 @@
 @property (nonatomic, strong) UIButton *button0;
 @property (nonatomic, strong) UIButton *button1;
 @property (nonatomic, strong) UIButton *button2;
+
 @end
 
 @implementation ViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-  
-    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = [appDelegate managedObjectContext];
-    NSEntityDescription *addressEntity  = [NSEntityDescription entityForName:@"Car" inManagedObjectContext:context];
-    Car *car0   = [[Car alloc] initWithEntity:addressEntity insertIntoManagedObjectContext:context];
-    [car0 setDriver:@"mike"];
     
-    NSError *error = nil;
-    if (![context save:&error]) {
-        NSLog(@"save error: %@", error);
-    }else{
-        NSLog(@"save 0 ok");
-    }
+//    [self simpleBlock];
+//    [self blockWithCopyScope];
+//    [self blockWithReferenceScopeAndTypeDef];
+//    
+//    /* run this a few times to see default and high switch places */
+//    [self GCDWithDequeueOrder];
     
+    /* shows that all code is executed/assigned within the block before the group is called */
+    [self dispatchGroupWithDelay];
+    
+}
+
+- (void)simpleBlock{
+    int (^MyBlock)(int) = ^(int num) { return num * 3; };
+    int aNum = MyBlock(3);
+    
+    NSLog(@"Num %i",aNum); //9
+
+}
+
+- (void)blockWithCopyScope{
+    int spec = 4;
+    
+    int (^MyBlock)(int) = ^(int aNum){
+        return aNum * spec;
+    };
+    
+    spec = 0;
+    NSLog(@"Block value is %d",MyBlock(4));
+}
+
+- (void)blockWithReferenceScopeAndTypeDef{
+    __block int spec = 4;
+    
+    typedef int (^MyBlock)(int);
+    
+    MyBlock InBlock = ^(int aNum){
+        return aNum * spec;
+    };
+    
+    spec = 0;
+    NSLog(@"InBlock value is %d",InBlock(4));
+}
+
+- (void)GCDWithDequeueOrder{
+    dispatch_queue_t low = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW,0);
+    dispatch_queue_t defaultQ = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0);
+    dispatch_queue_t high = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH,0);
+    dispatch_async(low, ^{
+        
+        NSLog(@"low");
+    });
+    dispatch_async(defaultQ, ^{
+        
+        NSLog(@"default");
+    });
+    dispatch_async(high, ^{
+        
+        NSLog(@"hight");
+    });
+}
+
+- (void)GCDWithDequeueOrder2{
+    dispatch_queue_t low = dispatch_queue_create("low",0);
+    dispatch_queue_t defaultQ = dispatch_queue_create("med",0);
+    dispatch_queue_t high = dispatch_queue_create("high",0);
+    dispatch_async(low, ^{
+        
+        NSLog(@"low");
+    });
+    dispatch_async(defaultQ, ^{
+        
+        NSLog(@"default");
+    });
+    dispatch_async(high, ^{
+        
+        NSLog(@"hight");
+    });
+}
+
+- (void)dispatchGroupWithDelay{
+    dispatch_queue_t queue = dispatch_get_global_queue(0,0);
+    dispatch_group_t group = dispatch_group_create();
+    
+    dispatch_group_async(group,queue,^{
+        NSLog(@"Block 1");
+    });
+    
+    dispatch_group_async(group,queue,^{
+        NSLog(@"Block 2");
+        sleep(5);
+        NSLog(@"Block 3");
+    });
+    
+    dispatch_group_notify(group,queue,^{
+        NSLog(@"Final block is executed last after 1, 2, sleep, and 3");
+    });
 }
 
 - (void)viewWillLayoutSubviews{
