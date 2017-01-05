@@ -17,8 +17,6 @@
 
 
 //Dec 20 8:57
-//Dec 20 9:15
-//Dec 20 9:22
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
