@@ -12,11 +12,13 @@
 
 @interface ViewController ()
 @property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UILabel *label2;
 @property (nonatomic, strong) UIButton *button0;
 @property (nonatomic, strong) UIButton *button1;
 @property (nonatomic, strong) UIButton *button2;
 @end
 
+/* A DIFF COMMENT */
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -26,7 +28,7 @@
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     NSEntityDescription *addressEntity  = [NSEntityDescription entityForName:@"Car" inManagedObjectContext:context];
     Car *car0   = [[Car alloc] initWithEntity:addressEntity insertIntoManagedObjectContext:context];
-    [car0 setDriver:@"mike"];
+    [car0 setYolo:@"mike"];
     
     NSError *error = nil;
     if (![context save:&error]) {
@@ -45,6 +47,12 @@
     labelFrame.size.height = 60.0f;
     labelFrame.size.width = CGRectGetWidth([[self view] frame]);
     [[self label] setFrame:labelFrame];
+    
+    CGRect labelFrame2 = [[self label2] frame];
+    labelFrame2.origin.y = 20.0f;
+    labelFrame2.size.height = 60.0f;
+    labelFrame2.size.width = CGRectGetWidth([[self view] frame]);
+    [[self label2] setFrame:labelFrame2];
     
     CGRect button0frame = [[self button0] frame];
     button0frame.size.height = 100.0f;
@@ -75,6 +83,17 @@
         return _label;
     }
     return _label;
+}
+
+- (UILabel *)label2{
+    if (!_label2){
+        _label2 = [[UILabel alloc] initWithFrame:CGRectZero];
+        [_label2 setText:@"CD"];
+        [_label2 setTextAlignment:NSTextAlignmentCenter];
+        [[self view] addSubview:_label2];
+        return _label2;
+    }
+    return _label2;
 }
 
 - (UIButton *)button0{

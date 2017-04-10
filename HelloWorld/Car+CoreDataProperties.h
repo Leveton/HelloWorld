@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Car (CoreDataProperties)
 
-@property (nullable, nonatomic, retain) NSString *driver;
+@property (nullable, nonatomic, retain) NSString *yolo;
 
 @end
 

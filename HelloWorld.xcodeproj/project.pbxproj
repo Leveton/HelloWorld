@@ -17,6 +17,7 @@
 		1CB6BC3C1C97564600741ED9 /* HelloWorldTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC3B1C97564600741ED9 /* HelloWorldTests.m */; };
 		1CB6BC581C97583000741ED9 /* Car+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC551C97583000741ED9 /* Car+CoreDataProperties.m */; };
 		1CB6BC591C97583000741ED9 /* Car.m in Sources */ = {isa = PBXBuildFile; fileRef = 1CB6BC571C97583000741ED9 /* Car.m */; };
+		7AFEA9301E9BA8C2007AE266 /* branchbFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AFEA92F1E9BA8C2007AE266 /* branchbFile.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,8 @@
 		1CB6BC561C97583000741ED9 /* Car.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Car.h; sourceTree = "<group>"; };
 		1CB6BC571C97583000741ED9 /* Car.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Car.m; sourceTree = "<group>"; };
 		1CF3013C1CAD7D320023C011 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
+		7AFEA92E1E9BA8C2007AE266 /* branchbFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = branchbFile.h; sourceTree = "<group>"; };
+		7AFEA92F1E9BA8C2007AE266 /* branchbFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = branchbFile.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +120,8 @@
 				1CB6BC2F1C97564600741ED9 /* LaunchScreen.storyboard */,
 				1CB6BC321C97564600741ED9 /* Info.plist */,
 				1CB6BC2A1C97564600741ED9 /* HelloWorld.xcdatamodeld */,
+				7AFEA92E1E9BA8C2007AE266 /* branchbFile.h */,
+				7AFEA92F1E9BA8C2007AE266 /* branchbFile.m */,
 				1CB6BC541C97583000741ED9 /* Car+CoreDataProperties.h */,
 				1CB6BC551C97583000741ED9 /* Car+CoreDataProperties.m */,
 				1CB6BC561C97583000741ED9 /* Car.h */,
@@ -286,6 +291,7 @@
 				1CB6BC591C97583000741ED9 /* Car.m in Sources */,
 				1CB6BC261C97564600741ED9 /* ViewController.m in Sources */,
 				1CB6BC581C97583000741ED9 /* Car+CoreDataProperties.m in Sources */,
+				7AFEA9301E9BA8C2007AE266 /* branchbFile.m in Sources */,
 				1CB6BC231C97564600741ED9 /* AppDelegate.m in Sources */,
 				1CB6BC201C97564600741ED9 /* main.m in Sources */,
 				1CB6BC2C1C97564600741ED9 /* HelloWorld.xcdatamodeld in Sources */,

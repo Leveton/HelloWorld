@@ -13,6 +13,6 @@
 
 @implementation Car (CoreDataProperties)
 
-@dynamic driver;
+@dynamic yolo;
 
 @end
