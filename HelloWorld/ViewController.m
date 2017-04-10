@@ -10,8 +10,9 @@
 #import "AppDelegate.h"
 #import "Car.h"
 
+/*this is a comment pushing down the vc */
 @interface ViewController ()
-@property (nonatomic, strong) UILabel *label;
+@property (nonatomic, strong) UITextField *textField;
 @property (nonatomic, strong) UIButton *button0;
 @property (nonatomic, strong) UIButton *button1;
 @property (nonatomic, strong) UIButton *button2;
@@ -25,26 +26,27 @@
     AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     NSManagedObjectContext *context = [appDelegate managedObjectContext];
     NSEntityDescription *addressEntity  = [NSEntityDescription entityForName:@"Car" inManagedObjectContext:context];
-    Car *car0   = [[Car alloc] initWithEntity:addressEntity insertIntoManagedObjectContext:context];
-    [car0 setDriver:@"mike"];
-    
-    NSError *error = nil;
-    if (![context save:&error]) {
-        NSLog(@"save error: %@", error);
-    }else{
-        NSLog(@"save 0 ok");
-    }
+    Car *car0 = [Car new];
+//    Car *car0   = [[Car alloc] initWithEntity:addressEntity insertIntoManagedObjectContext:context];
+//    [car0 setDriver:@"mike"];
+//    
+//    NSError *error = nil;
+//    if (![context save:&error]) {
+//        NSLog(@"save error: %@", error);
+//    }else{
+//        NSLog(@"save 0 ok");
+//    }
     
 }
 
 - (void)viewWillLayoutSubviews{
     [super viewWillLayoutSubviews];
     
-    CGRect labelFrame = [[self label] frame];
+    CGRect labelFrame = [[self textField] frame];
     labelFrame.origin.y = 20.0f;
     labelFrame.size.height = 60.0f;
     labelFrame.size.width = CGRectGetWidth([[self view] frame]);
-    [[self label] setFrame:labelFrame];
+    [[self textField] setFrame:labelFrame];
     
     CGRect button0frame = [[self button0] frame];
     button0frame.size.height = 100.0f;
@@ -66,15 +68,15 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (UILabel *)label{
-    if (!_label){
-        _label = [[UILabel alloc] initWithFrame:CGRectZero];
-        [_label setText:@"CD"];
-        [_label setTextAlignment:NSTextAlignmentCenter];
-        [[self view] addSubview:_label];
-        return _label;
+- (UITextField *)textField{
+    if (!_textField){
+        _textField = [[UITextField alloc] initWithFrame:CGRectZero];
+        [_textField setText:@"CD"];
+        [_textField setTextAlignment:NSTextAlignmentCenter];
+        [[self view] addSubview:_textField];
+        return _textField;
     }
-    return _label;
+    return _textField;
 }
 
 - (UIButton *)button0{
